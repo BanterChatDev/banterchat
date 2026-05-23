@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <meta name="description" content="{{.Description}}">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="{{.CanonicalURL}}">
+  <meta property="og:title" content="{{.Title}}">
+  <meta property="og:description" content="{{.Description}}">
+  <meta property="og:url" content="{{.CanonicalURL}}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Banter Guilds">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{.Title}}">
+  <meta name="twitter:description" content="{{.Description}}">
+  {{if .OGImage}}
+  <meta property="og:image" content="{{.OGImage}}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="{{.OGImage}}">
+  {{end}}
+  <meta name="theme-color" content="#5865f2">
+  {{if .JSONLD}}<script type="application/ld+json">{{.JSONLD}}</script>{{end}}
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --bg-card: #141823;
+      --bg-raised: #1e1f22;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(88,101,242,0.35);
+      --text: #e8e6e3;
+      --text-dim: rgba(255,255,255,0.6);
+      --text-faint: rgba(255,255,255,0.3);
+      --accent: #5865f2;
+      --accent-hover: #4752c4;
+      --warn: #f0b232;
+      --danger: #ed4245;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem; }
+    .nav { border-bottom: 1px solid var(--border); background: rgba(10,14,26,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
+    .nav-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; }
+    .brand { font-weight: 900; font-size: 1.05rem; letter-spacing: -0.02em; }
+    .brand span { color: var(--accent); }
+    .back { color: var(--text-dim); font-size: 0.85rem; }
+    .back:hover { color: var(--text); }
+    .banner { height: 220px; border-radius: 16px; background: linear-gradient(135deg, #5865f2 0%, #404eed 100%); background-size: cover; background-position: center; margin-bottom: -60px; position: relative; }
+    .banner.has-image { background-image: var(--b); }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: visible; padding: 1.75rem; position: relative; }
+    .icon { width: 120px; height: 120px; border-radius: 28px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 2.5rem; color: white; overflow: hidden; border: 4px solid var(--bg-card); margin: -80px 0 1rem; }
+    .icon img { width: 100%; height: 100%; object-fit: cover; }
+    .nsfw { display: inline-block; background: var(--danger); color: white; font-size: 0.6rem; padding: 0.15rem 0.45rem; border-radius: 3px; font-weight: 700; letter-spacing: 0.05em; vertical-align: middle; margin-left: 0.5rem; }
+    h1 { font-size: 1.75rem; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 0.35rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.75rem; color: var(--text-faint); font-size: 0.85rem; margin-bottom: 1rem; align-items: center; }
+    .meta .dot { opacity: 0.5; }
+    .meta .rating { color: var(--warn); }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.5rem; }
+    .tag { font-size: 0.7rem; background: rgba(255,255,255,0.06); padding: 0.2rem 0.55rem; border-radius: 4px; color: var(--text-dim); text-transform: lowercase; }
+    .bio { color: var(--text); font-size: 1rem; line-height: 1.7; white-space: pre-wrap; margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid var(--border); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+    .stat { background: var(--bg-raised); border: 1px solid var(--border); padding: 0.85rem; border-radius: 10px; text-align: center; }
+    .stat-value { font-size: 1.35rem; font-weight: 900; color: var(--text); margin-bottom: 0.15rem; }
+    .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .btn { display: inline-block; text-decoration: none; text-align: center; padding: 0.7rem 1.25rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; border: 0; cursor: pointer; font-family: inherit; transition: background 0.1s; flex: 1; min-width: 140px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-ghost { background: rgba(255,255,255,0.04); color: var(--text-dim); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+    .err { color: #f87171; font-size: 0.8rem; margin-top: 0.75rem; min-height: 1rem; }
+    .rate-block { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+    .rate-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: 0.5rem; }
+    .stars { display: inline-flex; gap: 0.25rem; }
+    .star { background: none; border: 0; padding: 0; font-size: 1.5rem; color: var(--text-faint); cursor: pointer; transition: color 0.1s, transform 0.1s; line-height: 1; }
+    .star:hover, .star.is-hover, .star.is-filled { color: var(--warn); }
+    .star:hover { transform: scale(1.15); }
+    .star:disabled { cursor: not-allowed; opacity: 0.6; }
+    .rate-note { font-size: 0.75rem; color: var(--text-faint); margin-left: 0.75rem; }
+    .footer { text-align: center; color: var(--text-faint); font-size: 0.75rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .invalid { text-align: center; padding: 3rem 1.25rem; }
+    .invalid h1 { color: var(--text-dim); }
+    .invalid p { color: var(--text-faint); margin-bottom: 1.5rem; }
+    @media (max-width: 640px) {
+      .container { padding: 1rem; }
+      .card { padding: 1.25rem; }
+      h1 { font-size: 1.35rem; }
+      .icon { width: 96px; height: 96px; font-size: 2rem; margin-top: -60px; }
+      .banner { height: 160px; margin-bottom: -40px; }
+      .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/"><span>Banter</span> Guilds</a>
+      <a class="back" href="https://{{.MainHost}}" rel="noopener">Back to Banter →</a>
+    </div>
+  </header>
+  <div class="container">
+    {{if .Invalid}}
+      <div class="invalid">
+        <h1>Listing not found</h1>
+        <p>This server hasn't published a public listing, or the listing was removed.</p>
+        <a href="/" class="btn btn-primary" style="display:inline-block">Browse all guilds</a>
+      </div>
+    {{else}}{{with .Listing}}
+      {{if .BannerURL}}<div class="banner has-image" style="--b:url('{{.BannerURL}}')"></div>{{end}}
+      <div class="card">
+        <div class="icon" {{if not .BannerURL}}style="margin-top:0"{{end}}>
+          {{if .IconURL}}<img src="{{.IconURL}}" alt="">{{else}}{{.Initials}}{{end}}
+        </div>
+        <h1>{{.Name}}{{if .NSFW}}<span class="nsfw">18+</span>{{end}}</h1>
+        <div class="meta">
+          <span>{{.MemberCount}} members</span>
+          <span class="dot">·</span>
+          <span>Bumped {{.BumpedAgo}}</span>
+          {{if gt .RatingCount 0}}<span class="dot">·</span><span class="rating">★ {{printf "%.1f" .RatingAvg}}</span><span>({{.RatingCount}})</span>{{end}}
+        </div>
+        {{if .Tags}}<div class="tags">
+          {{range .Tags}}<a class="tag" href="/tag/{{.}}">#{{.}}</a>{{end}}
+        </div>{{end}}
+        <div class="bio">{{.Bio}}</div>
+        <div class="stats">
+          <div class="stat"><div class="stat-value">{{.MemberCount}}</div><div class="stat-label">Members</div></div>
+          <div class="stat"><div class="stat-value">{{.BumpCount}}</div><div class="stat-label">Total Bumps</div></div>
+          <div class="stat"><div class="stat-value">{{if gt .RatingCount 0}}{{printf "%.1f" .RatingAvg}}{{else}}—{{end}}</div><div class="stat-label">Rating ({{.RatingCount}})</div></div>
+          <div class="stat"><div class="stat-value">{{.Language}}</div><div class="stat-label">Language</div></div>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="{{.InviteURL}}" rel="noopener">Join Server</a>
+          <button id="bump-btn" class="btn btn-ghost" data-slug="{{.Slug}}" data-initial-cooldown="{{$.InitialCooldownSeconds}}">Bump this listing</button>
+        </div>
+        <p class="err" id="err"></p>
+        <div class="rate-block">
+          <span class="rate-label">Rate this server</span>
+          <div class="stars" id="rate-stars" data-slug="{{.Slug}}" data-initial-stars="{{$.InitialUserStars}}" role="radiogroup" aria-label="Rate this server">
+            <button type="button" class="star" data-val="1" aria-label="1 star">★</button>
+            <button type="button" class="star" data-val="2" aria-label="2 stars">★</button>
+            <button type="button" class="star" data-val="3" aria-label="3 stars">★</button>
+            <button type="button" class="star" data-val="4" aria-label="4 stars">★</button>
+            <button type="button" class="star" data-val="5" aria-label="5 stars">★</button>
+          </div>
+          <span class="rate-note" id="rate-note"></span>
+        </div>
+      </div>
+    {{end}}{{end}}
+    <footer class="footer">
+      Banter Guilds — a public directory of <a href="https://{{.MainHost}}" rel="noopener" style="color:var(--text-dim)">Banter</a> communities.
+    </footer>
+  </div>
+  <script>
+    (function() {
+      var btn = document.getElementById('bump-btn');
+      if (!btn) return;
+      var err = document.getElementById('err');
+      var originalText = btn.textContent;
+
+      function formatRemaining(sec) {
+        if (sec <= 0) return '';
+        var h = Math.floor(sec / 3600);
+        var m = Math.floor((sec % 3600) / 60);
+        var s = sec % 60;
+        if (h > 0) return h + 'h ' + m + 'm';
+        if (m > 0) return m + 'm ' + s + 's';
+        return s + 's';
+      }
+
+      function startCooldown(seconds) {
+        btn.disabled = true;
+        var endAt = Date.now() + seconds * 1000;
+        function tick() {
+          var remaining = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+          if (remaining <= 0) {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            return;
+          }
+          btn.textContent = 'Bump in ' + formatRemaining(remaining);
+          setTimeout(tick, 1000);
+        }
+        tick();
+      }
+
+      var initialCooldown = parseInt(btn.getAttribute('data-initial-cooldown'), 10) || 0;
+      if (initialCooldown > 0) {
+        startCooldown(initialCooldown);
+      }
+
+      btn.addEventListener('click', function() {
+        var slug = btn.getAttribute('data-slug');
+        btn.disabled = true;
+        btn.textContent = 'Bumping...';
+        err.textContent = '';
+        fetch('/api/public/listings/' + encodeURIComponent(slug) + '/bump', {
+          method: 'POST',
+          credentials: 'include',
+        }).then(function(r) {
+          return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; });
+        }).then(function(res) {
+          if (res.status === 401) {
+            var here = encodeURIComponent(window.location.href);
+            window.location.href = 'https://{{.MainHost}}/login?redirect=' + here;
+            return;
+          }
+          if (!res.ok) {
+            if (res.data && typeof res.data.cooldown_seconds === 'number') {
+              startCooldown(res.data.cooldown_seconds);
+              err.textContent = '';
+              return;
+            }
+            err.textContent = (res.data && res.data.error) || 'Bump failed';
+            btn.disabled = false;
+            btn.textContent = originalText;
+            return;
+          }
+          btn.textContent = 'Bumped! ✓';
+          setTimeout(function(){ window.location.reload(); }, 800);
+        }).catch(function() {
+          err.textContent = 'Network error';
+          btn.disabled = false;
+          btn.textContent = originalText;
+        });
+      });
+    })();
+
+    (function() {
+      var root = document.getElementById('rate-stars');
+      if (!root) return;
+      var note = document.getElementById('rate-note');
+      var slug = root.getAttribute('data-slug');
+      var buttons = Array.prototype.slice.call(root.querySelectorAll('.star'));
+      var currentStars = 0;
+
+      function paint(filled, hovering) {
+        buttons.forEach(function(b, i) {
+          var v = i + 1;
+          b.classList.toggle('is-filled', !hovering && v <= filled);
+          b.classList.toggle('is-hover', hovering && v <= filled);
+        });
+      }
+
+      function setNote(msg, isError) {
+        note.textContent = msg || '';
+        note.style.color = isError ? '#f87171' : 'var(--text-faint)';
+      }
+
+      buttons.forEach(function(btn, i) {
+        btn.addEventListener('mouseenter', function() { paint(i + 1, true); });
+        btn.addEventListener('focus',      function() { paint(i + 1, true); });
+        btn.addEventListener('click', function() {
+          var stars = i + 1;
+          buttons.forEach(function(b) { b.disabled = true; });
+          setNote('Saving...', false);
+          fetch('/api/public/listings/' + encodeURIComponent(slug) + '/rate', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stars: stars }),
+          }).then(function(r) {
+            return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; });
+          }).then(function(res) {
+            buttons.forEach(function(b) { b.disabled = false; });
+            if (res.status === 401) {
+              var here = encodeURIComponent(window.location.href);
+              window.location.href = 'https://{{.MainHost}}/login?redirect=' + here;
+              return;
+            }
+            if (!res.ok) {
+              setNote((res.data && res.data.error) || 'Rating failed', true);
+              paint(currentStars, false);
+              return;
+            }
+            currentStars = res.data.your_stars || stars;
+            paint(currentStars, false);
+            setNote('Thanks! You rated ' + currentStars + ' star' + (currentStars === 1 ? '' : 's') + '.', false);
+          }).catch(function() {
+            buttons.forEach(function(b) { b.disabled = false; });
+            setNote('Network error', true);
+            paint(currentStars, false);
+          });
+        });
+      });
+
+      root.addEventListener('mouseleave', function() { paint(currentStars, false); });
+
+      currentStars = parseInt(root.getAttribute('data-initial-stars'), 10) || 0;
+      if (currentStars > 0) {
+        paint(currentStars, false);
+        setNote('Your rating: ' + currentStars + ' star' + (currentStars === 1 ? '' : 's'), false);
+      }
+    })();
+  </script>
+</body>
+</html>

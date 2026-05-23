@@ -1,0 +1,18 @@
+package accessibilityprefs
+
+import "ror/modules/router"
+
+func (s *Service) Prefix() string {
+	return ""
+}
+
+func (s *Service) Routes() []router.RouteConfig {
+	return []router.RouteConfig{
+		{Method: "GET", Path: "/me/accessibility-prefs", Handler: s.GetHandler, Auth: true},
+		{Method: "PUT", Path: "/me/accessibility-prefs", Handler: s.UpdateHandler, CSRF: true, Auth: true},
+	}
+}
+
+func (s *Service) BotRoutes() []router.RouteConfig {
+	return nil
+}

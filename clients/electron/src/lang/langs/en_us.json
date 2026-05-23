@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "banterchat"
+  },
+  "passphrase": {
+    "mode_setup_label": "first-time setup",
+    "mode_unlock_label": "unlock",
+    "mode_setup_text": "Choose a passphrase. You will need it every time you launch banterchat. There is no recovery if you forget it.",
+    "mode_unlock_text": "Enter your passphrase to continue.",
+    "placeholder_passphrase": "passphrase",
+    "placeholder_confirm": "confirm passphrase",
+    "btn_unlock": "Unlock",
+    "btn_set": "Set passphrase",
+    "btn_reset": "Forget & reset",
+    "hint_setup": "Your passphrase encrypts your session locally. We never see it.",
+    "hint_unlock": "Forgot it? Reset to log in fresh.",
+    "err_too_short": "Passphrase must be at least 8 characters.",
+    "err_mismatch": "Passphrases do not match.",
+    "err_empty": "Enter your passphrase.",
+    "err_wrong": "Wrong passphrase.",
+    "confirm_reset": "This deletes your saved session. You will need to log in again. Continue?"
+  },
+  "settings": {
+    "window_title": "banterchat — Settings",
+    "heading": "Desktop Settings",
+    "subheading": "Settings that only apply to the desktop app",
+    "section_account": "Account",
+    "section_account_desc": "Your local encrypted session",
+    "btn_change_passphrase": "Change passphrase",
+    "btn_clear_session": "Sign out & wipe local session",
+    "section_language": "Language",
+    "section_language_desc": "The language used by the desktop client's own UI",
+    "label_ui_language": "UI language",
+    "section_window": "Window",
+    "label_start_minimized": "Start minimized to tray",
+    "label_close_to_tray": "Close to tray instead of quitting",
+    "label_launch_on_login": "Launch on system startup",
+    "section_about": "About",
+    "label_version": "Version",
+    "label_file_path": "Encrypted session file",
+    "label_open_folder": "Open folder",
+    "btn_close": "Close",
+    "change_pp_current": "Current passphrase",
+    "change_pp_new": "New passphrase",
+    "change_pp_confirm": "Confirm new passphrase",
+    "change_pp_btn_save": "Save new passphrase",
+    "change_pp_err_current_wrong": "Current passphrase is wrong.",
+    "change_pp_ok": "Passphrase changed."
+  }
+}

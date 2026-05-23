@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <meta name="description" content="{{.Description}}">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="{{.PageURL}}">
+  <meta property="og:title" content="{{.Title}}">
+  <meta property="og:description" content="{{.Description}}">
+  <meta property="og:url" content="{{.PageURL}}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Banter">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{.Title}}">
+  <meta name="twitter:description" content="{{.Description}}">
+  {{if .ImageURL}}
+  <meta property="og:image" content="{{.ImageURL}}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="{{.ImageURL}}">
+  {{end}}
+  <meta name="theme-color" content="#5865f2">
+  <style>
+    html, body { margin: 0; height: 100%; background: #0a0e1a; color: #e8e6e3; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .outer { max-width: 420px; width: 100%; }
+    .label { text-align: center; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; color: rgba(255,255,255,0.3); margin-bottom: 12px; }
+    .card { background: #1e1f22; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+    .banner { height: 120px; background: linear-gradient(135deg, #5865f2 0%, #404eed 100%); background-size: cover; background-position: center; }
+    .banner.has-image { background-image: var(--b); }
+    .body { padding: 20px; text-align: center; }
+    .icon { width: 72px; height: 72px; margin: -48px auto 12px; border-radius: 20px; background: #5865f2; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; color: white; border: 4px solid #1e1f22; overflow: hidden; }
+    .icon img { width: 100%; height: 100%; object-fit: cover; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .meta { color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 16px; }
+    .desc { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
+    .err { color: #f87171; font-size: 12px; text-align: center; margin-top: 12px; min-height: 16px; }
+    .actions { display: flex; gap: 8px; margin-top: 16px; }
+    .btn { flex: 1; text-decoration: none; text-align: center; padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 0; cursor: pointer; font-family: inherit; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-cancel { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); }
+    .btn-cancel:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .btn-accept { background: #5865f2; color: white; }
+    .btn-accept:hover { background: #4752c4; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="outer">
+      {{if .Invalid}}
+        <p class="label">Invite invalid</p>
+        <div class="card">
+          <div class="body">
+            <h1>This invite is invalid</h1>
+            <p class="desc">It may have expired, been deleted, or never existed. Ask whoever shared it for a new link.</p>
+            <div class="actions">
+              <a href="/" class="btn btn-accept">Back to Banter</a>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <p class="label" id="label">{{if not .IsAuthenticated}}Sign in to accept this invite{{else if .AlreadyMember}}You're already a member{{else}}You've been invited to join{{end}}</p>
+        <div class="card">
+          <div class="banner{{if .BannerURL}} has-image{{end}}" style="{{if .BannerURL}}--b:url('{{.BannerURL}}'){{end}}"></div>
+          <div class="body">
+            <div class="icon">
+              {{if .IconURL}}<img src="{{.IconURL}}" alt="">{{else}}{{.Initials}}{{end}}
+            </div>
+            <h1>{{.GuildName}}</h1>
+            <p class="meta">{{.MemberCount}} members</p>
+            {{if .GuildDescription}}<p class="desc">{{.GuildDescription}}</p>{{end}}
+            <div class="actions">
+              {{if not .IsAuthenticated}}
+                <a href="{{.LoginURL}}" class="btn btn-cancel">Sign In</a>
+                <a href="{{.RegisterURL}}" class="btn btn-accept">Create Account</a>
+              {{else if .AlreadyMember}}
+                <a href="/channels" class="btn btn-cancel">Cancel</a>
+                <a href="{{.GuildChannelURL}}" class="btn btn-accept">Go to Server</a>
+              {{else}}
+                <a href="/channels" class="btn btn-cancel">Cancel</a>
+                <button id="accept" class="btn btn-accept" data-code="{{.Code}}" data-guild="{{.GuildID}}">Accept Invite</button>
+              {{end}}
+            </div>
+            <p class="err" id="err"></p>
+          </div>
+        </div>
+      {{end}}
+    </div>
+  </div>
+  <script>
+    (function() {
+      var btn = document.getElementById('accept');
+      if (!btn) return;
+      var err = document.getElementById('err');
+      function getCookie(name) {
+        var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : '';
+      }
+      function ensureCSRF() {
+        var tok = getCookie('csrf_token');
+        if (tok) return Promise.resolve(tok);
+        return fetch('/api/v1/csrf', { credentials: 'include' }).then(function(r) { return r.json(); }).then(function(d) { return d.csrf_token || ''; });
+      }
+      btn.addEventListener('click', function() {
+        btn.disabled = true;
+        btn.textContent = 'Joining...';
+        err.textContent = '';
+        var code = btn.getAttribute('data-code');
+        var guild = btn.getAttribute('data-guild');
+        ensureCSRF().then(function(tok) {
+          return fetch('/api/v1/invites/' + encodeURIComponent(code) + '/join', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'X-CSRF-Token': tok, 'Content-Type': 'application/json' },
+          });
+        }).then(function(r) {
+          return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; });
+        }).then(function(res) {
+          if (!res.ok) {
+            err.textContent = (res.data && res.data.error) || 'Failed to join';
+            btn.disabled = false;
+            btn.textContent = 'Accept Invite';
+            return;
+          }
+          var gid = (res.data && res.data.guild_id) || guild;
+          window.location.href = '/channels/' + gid;
+        }).catch(function() {
+          err.textContent = 'Network error';
+          btn.disabled = false;
+          btn.textContent = 'Accept Invite';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

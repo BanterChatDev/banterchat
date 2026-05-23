@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <meta name="description" content="{{.Description}}">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="{{.PageURL}}">
+  <meta property="og:title" content="{{.Title}}">
+  <meta property="og:description" content="{{.Description}}">
+  <meta property="og:url" content="{{.PageURL}}">
+  <meta property="og:type" content="{{.OGType}}">
+  <meta property="og:site_name" content="Banter">
+  <meta name="twitter:card" content="{{.TwitterCard}}">
+  <meta name="twitter:title" content="{{.Title}}">
+  <meta name="twitter:description" content="{{.Description}}">
+  {{if .IsImage}}
+  <meta property="og:image" content="{{.RawURL}}">
+  <meta name="twitter:image" content="{{.RawURL}}">
+  {{end}}
+  {{if .IsVideo}}
+  <meta property="og:video" content="{{.RawURL}}">
+  <meta property="og:video:type" content="{{.Mime}}">
+  {{end}}
+  {{if .IsAudio}}
+  <meta property="og:audio" content="{{.RawURL}}">
+  {{end}}
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    img, video {
+      display: block;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      background: #000;
+    }
+    audio {
+      width: min(720px, calc(100vw - 32px));
+    }
+  </style>
+</head>
+<body>
+  {{if .IsImage}}<img src="{{.RawURL}}" alt="{{.Title}}">{{end}}
+  {{if .IsVideo}}<video src="{{.RawURL}}" controls playsinline preload="metadata"></video>{{end}}
+  {{if .IsAudio}}<audio src="{{.RawURL}}" controls preload="metadata"></audio>{{end}}
+</body>
+</html>

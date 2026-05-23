@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appeal a decision · Banter</title>
+  <meta name="description" content="Think we got a moderation decision wrong? Tell us, we'll take another look.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://banterchat.org/appeal">
+  <meta property="og:title" content="Appeal a decision · Banter">
+  <meta property="og:description" content="Think we got a moderation decision wrong? Tell us, we'll take another look.">
+  <meta property="og:url" content="https://banterchat.org/appeal">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Banter">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Appeal a decision · Banter">
+  <meta name="twitter:description" content="Think we got a moderation decision wrong? Tell us, we'll take another look.">
+  <meta name="theme-color" content="#5865f2">
+  <link rel="icon" href="/media/landing/logo.webp" type="image/webp">
+  <link rel="stylesheet" href="/css/app.bundle.css">
+</head>
+<body class="m-0 min-h-screen bg-[#0a0e1a] text-white antialiased">
+  <div class="relative min-h-screen flex flex-col overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-1/4 -left-40 w-[600px] h-[600px] rounded-full bg-[var(--accent)]/10 blur-[120px]"></div>
+      <div class="absolute bottom-1/4 -right-40 w-[500px] h-[500px] rounded-full bg-[var(--accent)]/5 blur-[140px]"></div>
+    </div>
+
+    <header class="relative z-10 px-[clamp(1.5rem,4vw,3rem)] py-[clamp(0.875rem,1.5vw,1.25rem)] border-b border-white/[0.06]">
+      <a href="/" class="inline-flex items-center gap-2 hover:opacity-80 transition-opacity no-underline">
+        <img src="/media/landing/logo.webp" alt="Banter" class="w-7 h-7">
+        <span class="text-[clamp(0.85rem,1.1vw,1rem)] font-black tracking-wide uppercase text-white">Banter</span>
+      </a>
+    </header>
+
+    <main class="relative z-10 flex-1 w-full max-w-2xl mx-auto px-[clamp(1.5rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
+      <h1 class="text-[clamp(2rem,4.5vw,3rem)] font-black leading-[1.05] tracking-tight mb-[clamp(0.5rem,1vw,0.75rem)]">Appeal a decision</h1>
+      <p class="text-[clamp(0.875rem,1vw,1rem)] text-white/45 mb-[clamp(2rem,4vw,3rem)]">Think we got it wrong? Tell us, and we'll take another look. Be specific — vague appeals get vague answers.</p>
+
+      <div id="form-wrap" class="relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-[clamp(1.25rem,2.5vw,2rem)]">
+        <div class="absolute -top-px left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/60 to-transparent"></div>
+
+        <form id="appeal-form" novalidate>
+          <div class="mb-[clamp(1rem,1.8vw,1.5rem)]">
+            <label for="username" class="block text-[clamp(0.7rem,0.85vw,0.8rem)] font-semibold uppercase tracking-[0.05em] text-white/55 mb-[clamp(0.3rem,0.5vw,0.45rem)]">Account username</label>
+            <input id="username" name="username" type="text" required maxlength="64"
+              class="w-full box-border bg-[#1a1d24] border border-white/10 rounded-md px-[clamp(0.7rem,1vw,0.875rem)] py-[clamp(0.5rem,0.8vw,0.65rem)] text-[clamp(0.85rem,1vw,0.95rem)] text-white placeholder-white/25 focus:outline-none focus:border-[var(--accent)] transition-colors">
+          </div>
+
+          <div class="mb-[clamp(1rem,1.8vw,1.5rem)]">
+            <label for="email" class="block text-[clamp(0.7rem,0.85vw,0.8rem)] font-semibold uppercase tracking-[0.05em] text-white/55 mb-[clamp(0.3rem,0.5vw,0.45rem)]">Contact email</label>
+            <input id="email" name="email" type="email" required maxlength="200"
+              class="w-full box-border bg-[#1a1d24] border border-white/10 rounded-md px-[clamp(0.7rem,1vw,0.875rem)] py-[clamp(0.5rem,0.8vw,0.65rem)] text-[clamp(0.85rem,1vw,0.95rem)] text-white placeholder-white/25 focus:outline-none focus:border-[var(--accent)] transition-colors">
+            <p class="mt-[clamp(0.2rem,0.4vw,0.3rem)] text-[clamp(0.65rem,0.8vw,0.75rem)] text-white/35">We'll reply here. Use a real address.</p>
+          </div>
+
+          <div class="mb-[clamp(1rem,1.8vw,1.5rem)]">
+            <label for="reason" class="block text-[clamp(0.7rem,0.85vw,0.8rem)] font-semibold uppercase tracking-[0.05em] text-white/55 mb-[clamp(0.3rem,0.5vw,0.45rem)]">Why was the decision wrong?</label>
+            <textarea id="reason" name="reason" required rows="6" maxlength="4000"
+              placeholder="Be specific. What were you doing? What got you penalized? What context are we missing? Walk us through it."
+              class="w-full box-border bg-[#1a1d24] border border-white/10 rounded-md px-[clamp(0.7rem,1vw,0.875rem)] py-[clamp(0.5rem,0.8vw,0.65rem)] text-[clamp(0.85rem,1vw,0.95rem)] text-white placeholder-white/25 focus:outline-none focus:border-[var(--accent)] transition-colors resize-y"></textarea>
+          </div>
+
+          <button type="submit" id="submit-btn"
+            class="inline-flex items-center justify-center gap-2 px-[clamp(1.25rem,2vw,1.75rem)] py-[clamp(0.55rem,0.9vw,0.75rem)] rounded-md bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-[clamp(0.85rem,1vw,0.95rem)] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            Submit appeal
+          </button>
+          <p id="err" class="mt-[clamp(0.5rem,1vw,0.75rem)] text-[clamp(0.75rem,0.9vw,0.875rem)] text-red-400 min-h-[1em]"></p>
+        </form>
+      </div>
+
+      <div id="success-wrap" class="relative rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.04] backdrop-blur-sm p-[clamp(1.25rem,2.5vw,2rem)]" style="display:none;">
+        <p class="text-[clamp(0.95rem,1.1vw,1.125rem)] font-semibold text-emerald-300 mb-[clamp(0.4rem,0.6vw,0.6rem)]">Got it.</p>
+        <p class="text-[clamp(0.875rem,1vw,1rem)] text-white/70 leading-[1.7]">Your appeal is in the queue. We'll review it and email you back. Most appeals are reviewed within a few business days. If we ask for more info and don't hear from you in two weeks, the appeal closes.</p>
+      </div>
+
+      <nav class="mt-[clamp(2rem,4vw,3rem)] pt-[clamp(1rem,2vw,1.5rem)] border-t border-white/[0.06] flex flex-wrap gap-[clamp(0.75rem,1.5vw,1.25rem)] text-[clamp(0.75rem,0.9vw,0.875rem)]">
+        <a href="/tos" class="text-white/45 hover:text-white transition-colors">Terms</a>
+        <a href="/privacy" class="text-white/45 hover:text-white transition-colors">Privacy</a>
+        <a href="/info" class="text-white/45 hover:text-white transition-colors">About</a>
+        <a href="/" class="text-white/45 hover:text-white transition-colors">Home</a>
+      </nav>
+    </main>
+
+    <footer class="relative z-10 py-[clamp(0.5rem,0.8vw,0.75rem)] text-center text-[clamp(0.6rem,0.7vw,0.7rem)] text-white/20">
+      © Banter
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var form = document.getElementById('appeal-form');
+      var btn = document.getElementById('submit-btn');
+      var errEl = document.getElementById('err');
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        errEl.textContent = '';
+        btn.disabled = true;
+        var data = {
+          username: form.username.value.trim(),
+          email: form.email.value.trim(),
+          reason: form.reason.value.trim(),
+        };
+        if (!data.username || !data.email || !data.reason) {
+          errEl.textContent = 'All fields are required.';
+          btn.disabled = false;
+          return;
+        }
+        fetch('/api/v1/appeals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }).then(function (res) {
+          btn.disabled = false;
+          if (res.ok) {
+            document.getElementById('form-wrap').style.display = 'none';
+            document.getElementById('success-wrap').style.display = 'block';
+          } else {
+            return res.json().catch(function () { return {}; }).then(function (j) {
+              errEl.textContent = j.error || 'Submission failed. Try again later.';
+            });
+          }
+        }).catch(function () {
+          btn.disabled = false;
+          errEl.textContent = 'Network error. Try again.';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
