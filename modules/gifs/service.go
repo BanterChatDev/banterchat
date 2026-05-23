@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"ror/modules/conf"
 	"ror/modules/db"
 	"ror/modules/id"
 	"ror/modules/websocket"
@@ -58,10 +59,10 @@ type GifJSON struct {
 }
 
 func (s *Service) providerRequest(endpoint string, params url.Values) (*tenorResp, error) {
-	if s.cfg.APIKey == "" || s.cfg.APIKey == "REPLACE_WITH_KLIPY_KEY" {
+	if conf.TenorAPIKey == "" {
 		return nil, errors.New("gif provider api key not configured")
 	}
-	params.Set("key", s.cfg.APIKey)
+	params.Set("key", conf.TenorAPIKey)
 	params.Set("client_key", s.cfg.Client)
 	params.Set("media_filter", "tinygif,gif")
 	if s.cfg.ContentFilter != "" {

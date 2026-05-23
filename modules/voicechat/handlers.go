@@ -7,6 +7,7 @@ import (
 	"github.com/livekit/protocol/auth"
 	"github.com/livekit/protocol/webhook"
 	"ror/modules/logger"
+	"ror/modules/conf"
 	"ror/modules/permissions"
 )
 
@@ -43,7 +44,7 @@ func (s *Service) HandleToken(c echo.Context) error {
 		logger.Error("voice: mint token failed", "user", userID, "channel", req.ChannelID, "error", err)
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "token mint failed"})
 	}
-	return c.JSON(http.StatusOK, tokenResponse{Token: token, URL: s.cfg.URL})
+	return c.JSON(http.StatusOK, tokenResponse{Token: token, URL: conf.LiveKitURL})
 }
 
 func (s *Service) HandleGetStates(c echo.Context) error {
@@ -51,7 +52,7 @@ func (s *Service) HandleGetStates(c echo.Context) error {
 }
 
 func (s *Service) HandleWebhook(c echo.Context) error {
-	provider := auth.NewSimpleKeyProvider(s.cfg.APIKey, s.cfg.APISecret)
+	provider := auth.NewSimpleKeyProvider(conf.LiveKitAPIKey, conf.LiveKitAPISecret)
 	event, err := webhook.ReceiveWebhookEvent(c.Request(), provider)
 	if err != nil {
 		logger.Error("voice: webhook verify failed", "error", err)

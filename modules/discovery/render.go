@@ -34,7 +34,7 @@ type listingView struct {
 }
 
 func (s *Service) decryptField(ciphertext string) string {
-	return encryption.DecryptField(ciphertext, (conf.Default{}).Auth().MasterKey)
+	return encryption.DecryptField(ciphertext, conf.MasterKey)
 }
 
 func (s *Service) subdomainAbsURL(c echo.Context, path string) string {

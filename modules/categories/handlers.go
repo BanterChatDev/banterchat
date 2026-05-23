@@ -24,7 +24,7 @@ func NewService(db *db.DB, hub *websocket.Hub, audit *auditlog.Service) *Service
 }
 
 func (s *Service) decryptCategory(c *Category) {
-	c.Name = encryption.DecryptField(c.Name, (conf.Default{}).Auth().MasterKey)
+	c.Name = encryption.DecryptField(c.Name, conf.MasterKey)
 }
 
 func (s *Service) decryptCategories(cats []Category) []Category {
@@ -65,7 +65,7 @@ func (s *Service) Create(c echo.Context) error {
 	}
 	userID := c.Get("userID").(string)
 	guildID := c.Param("guildId")
-	cat, err := s.createCategoryInGuild(guildID, req.Name, userID, (conf.Default{}).Auth().MasterKey)
+	cat, err := s.createCategoryInGuild(guildID, req.Name, userID, conf.MasterKey)
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE") {
 			return c.JSON(409, echo.Map{"error": ErrCategoryExists.Error()})
@@ -123,7 +123,7 @@ func (s *Service) Update(c echo.Context) error {
 	if req.Position != nil {
 		position = *req.Position
 	}
-	if err := s.updateCategory(id, name, position, (conf.Default{}).Auth().MasterKey); err != nil {
+	if err := s.updateCategory(id, name, position, conf.MasterKey); err != nil {
 		return c.JSON(500, echo.Map{"error": ErrServerError.Error()})
 	}
 	updated, _ := s.getDecryptedWithOverrides(id)

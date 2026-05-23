@@ -1,7 +1,6 @@
 package warnings
 
 import (
-	"os"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -48,20 +47,6 @@ var presetReasons = []string{
 	"Repeatedly violating the Terms of Service",
 	"Disruptive behavior in public servers",
 	"Misuse of the report system",
-}
-
-var warningSystemTemplate = buildWarningTemplate()
-
-func buildWarningTemplate() string {
-	termsURL := os.Getenv("TERMS_URL")
-	if termsURL == "" {
-		termsURL = "https://example.com/terms"
-	}
-	return `You have been warned by the server admins, the reason includes the following:
-
-%s
-
-Please follow the terms of service. ` + termsURL
 }
 
 func (s *Service) PresetReasons(c echo.Context) error {
@@ -120,9 +105,7 @@ func (s *Service) Issue(c echo.Context) error {
 	s.db.Exec(`INSERT INTO user_warnings_unread (user_id, warning_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, targetID, wid)
 	s.db.Exec(`UPDATE users SET warning_count = warning_count + 1 WHERE id = $1`, targetID)
 
-	formatted := s.formatWarning(cleanReasons, body.Note)
-
-	s.emitIssued(targetID, wid, cleanReasons, body.Note, sev, formatted)
+	s.emitIssued(targetID, wid, cleanReasons, body.Note, sev)
 
 	if s.audit != nil {
 		s.audit.RecordSite(actorID, auditlog.TargetUser, targetID, auditlog.ActionUserWarn,
@@ -131,25 +114,6 @@ func (s *Service) Issue(c echo.Context) error {
 	}
 
 	return c.JSON(201, echo.Map{"id": wid, "delivered": true})
-}
-
-func (s *Service) formatWarning(reasons []string, note string) string {
-	var b strings.Builder
-	if len(reasons) > 0 {
-		for _, r := range reasons {
-			b.WriteString("• ")
-			b.WriteString(r)
-			b.WriteString("\n")
-		}
-	}
-	if strings.TrimSpace(note) != "" {
-		if b.Len() > 0 {
-			b.WriteString("\nAdditional notes:\n")
-		}
-		b.WriteString(note)
-	}
-	body := strings.TrimSpace(b.String())
-	return strings.Replace(warningSystemTemplate, "%s", body, 1)
 }
 
 func (s *Service) ListForUser(c echo.Context) error {

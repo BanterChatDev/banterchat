@@ -10,6 +10,7 @@ import (
 	"ror/modules/auditlog"
 	"ror/modules/db"
 	"ror/modules/encryption"
+	"ror/modules/conf"
 	"ror/modules/keyfile"
 	"ror/modules/permissions"
 	"ror/modules/users"
@@ -74,7 +75,7 @@ func NewService(db *db.DB, authCfg Config, domain string, secure bool, blacklist
 }
 
 func (s *Service) hashIP(ip string) string {
-	return encryption.HashIdentifier(ip, s.authCfg.MasterKey)
+	return encryption.HashIdentifier(ip, conf.MasterKey)
 }
 
 func (s *Service) setSession(c echo.Context, userID string) {

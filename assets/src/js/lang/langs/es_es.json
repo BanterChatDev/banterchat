@@ -12,15 +12,28 @@
     "time_seconds_ago_template": "hace {n}s",
     "time_minutes_ago_template": "hace {n}m",
     "time_hours_ago_template": "hace {n}h",
-    "time_days_ago_template": "hace {n}d"
+    "time_days_ago_template": "hace {n}d",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "working": "Procesando...",
+    "error": "Algo ha salido mal"
   },
   "settings": {
     "title": "Ajustes",
+    "group": {
+      "general": "General",
+      "security": "Seguridad"
+    },
     "tabs": {
       "profile": "Perfil",
+      "notifications": "Notificaciones",
       "themes": "Temas",
       "language": "Idioma",
-      "devices": "Dispositivos"
+      "accessibility": "Accesibilidad",
+      "keyfile": "Archivo de clave",
+      "password": "Contraseña",
+      "devices": "Dispositivos",
+      "security_log": "Registro de seguridad"
     },
     "language": {
       "heading": "Idioma",
@@ -51,46 +64,43 @@
       "more_platforms": "Versiones para macOS y Linux próximamente."
     },
     "footer": {
-      "copyright": "Banter — Est. 2026 — Todos los derechos reservados"
+      "copyright": "Banter — Est. 2026 — Todos los derechos reservados",
+      "tos": "Términos",
+      "privacy": "Privacidad",
+      "guidelines": "Normas",
+      "content_policy": "Política de contenido",
+      "appeal": "Apelar"
     }
   },
   "auth_error": {
-    "verify_email_to_login": "Comprueba tu correo para verificar este inicio de sesión"
+    "verify_device_keyfile": "Sube tu archivo de clave para verificar este dispositivo"
+  },
+  "profile_validation": {
+    "username_length": "El nombre de usuario debe tener entre 3 y 20 caracteres",
+    "display_name_too_long": "El nombre para mostrar debe tener 32 caracteres o menos"
   },
   "auth": {
     "title": {
       "login": "Iniciar sesión",
       "register": "Crear cuenta",
-      "forgot": "Restablecer contraseña",
-      "verify_link_expired": "Enlace caducado",
-      "verify_password_updated": "Contraseña actualizada",
-      "verify_location": "Ubicación verificada",
-      "verify_email": "Correo verificado",
-      "verify_default": "Verificado"
+      "forgot": "Restablecer contraseña"
     },
     "subtitle": {
       "login": "Bienvenido de nuevo.",
       "register": "Elige un nombre de usuario y una contraseña para empezar.",
       "forgot": "Introduce tu correo y una contraseña nueva. Te enviaremos un enlace de verificación para confirmarlo."
     },
-    "verify_message": {
-      "link_expired": "Ese enlace de verificación ha caducado o ya se ha usado. Solicita uno nuevo desde la página de inicio de sesión.",
-      "password_updated": "Tu contraseña se ha actualizado. Inicia sesión con la nueva contraseña para continuar.",
-      "location": "Este dispositivo y dirección IP ahora son de confianza para tu cuenta. Llevándote al chat...",
-      "email": "Tu dirección de correo se ha verificado y guardado en tu cuenta."
-    },
     "label": {
       "username": "Nombre de usuario",
       "password": "Contraseña",
       "new_password": "Contraseña nueva",
-      "email": "Correo"
+      "keyfile": "Archivo de clave"
     },
     "placeholder": {
       "username_login": "tu nombre de usuario",
       "username_register": "elige un nombre de usuario",
       "password_login": "••••",
-      "min_8_chars": "mín. 8 caracteres",
-      "email": "tu@correo.com"
+      "min_8_chars": "mín. 8 caracteres"
     },
     "hint": {
       "username_length": "3–20 caracteres"
@@ -101,9 +111,7 @@
       "register": "Crear cuenta",
       "creating": "Creando...",
       "forgot_send": "Enviar enlace de restablecimiento",
-      "forgot_sending": "Enviando...",
-      "go_to_login": "Ir al inicio de sesión",
-      "continue_to_chat": "Continuar al chat"
+      "forgot_sending": "Enviando..."
     },
     "link": {
       "forgot_password": "Contraseña olvidada",
@@ -113,11 +121,29 @@
       "no_account": "¿No tienes cuenta? ",
       "have_account": "¿Ya tienes cuenta? "
     },
-    "verify": {
-      "verifying": "Verificando..."
+    "register": {
+      "agreement_prefix": "Al crear una cuenta, aceptas nuestros",
+      "agreement_tos": "Términos del servicio",
+      "agreement_and": "y",
+      "agreement_privacy": "Política de privacidad"
+    },
+    "keyfile": {
+      "new_device_prompt": "Dispositivo nuevo detectado. Sube tu archivo de clave para verificar que eres tú.",
+      "choose_file": "Elegir archivo de clave",
+      "back_to_login": "Volver al inicio de sesión"
+    },
+    "block": {
+      "banned_title": "Cuenta baneada",
+      "suspended_title": "Cuenta suspendida",
+      "reason_label": "Motivo",
+      "by_label": "Baneado por",
+      "when_label": "Cuándo",
+      "until_label": "Suspendido hasta"
     },
     "forgot": {
-      "default_response": "Si ese correo está registrado, se ha enviado un enlace de restablecimiento"
+      "default_response": "Si ese correo está registrado, se ha enviado un enlace de restablecimiento",
+      "keyfile_required": "Selecciona tu archivo de clave.",
+      "choose_keyfile": "Selecciona tu archivo de clave"
     },
     "password_strength": {
       "coal": "Carbón",
@@ -129,21 +155,76 @@
   },
   "notifications": {
     "banned": "Has sido baneado",
+    "suspended": "Tu cuenta ha sido suspendida",
+    "suspended_with_reason": "Tu cuenta ha sido suspendida: {reason}",
+    "account_deleted": "Tu cuenta ha sido eliminada",
+    "session_ended": "Tu sesión ha terminado",
     "action_failed": "Acción fallida.",
     "request_failed": "Solicitud fallida",
     "request_too_large": "Solicitud demasiado grande"
   },
-  "settings_devices": {
-    "title": "Sesiones activas",
-    "description": "Gestiona los dispositivos donde has iniciado sesión. Revocar una sesión cerrará la sesión en ese dispositivo.",
-    "current": "Actual",
-    "session_prefix": "Sesión ",
-    "started_prefix": "Iniciada ",
-    "ip_hash": "Hash IP",
-    "revoke": "Revocar",
-    "empty": "Sin sesiones activas",
-    "unknown_device": "Dispositivo desconocido",
-    "ua_join": " en "
+  "settings_security": {
+    "password_required": "Contraseña requerida",
+    "keyfile": {
+      "title": "Archivo de clave",
+      "explainer": "Tu archivo de clave es necesario cuando inicias sesión desde un dispositivo nuevo y al cambiar tu contraseña. Genera uno para activar la recuperación de dos factores; rótalo cuando quieras (solo se requiere tu contraseña, así también recuperas la cuenta si has perdido el archivo); elimínalo solo si quieres desactivar el segundo factor por completo.",
+      "status": "Estado",
+      "set": "Configurado",
+      "not_set": "Sin configurar",
+      "generate": "Generar archivo de clave",
+      "rotate": "Rotar archivo de clave",
+      "remove": "Eliminar archivo de clave",
+      "confirm_rotate": "Generar nuevo archivo de clave",
+      "confirm_remove": "Eliminar permanentemente",
+      "current_required": "Sube tu archivo de clave actual.",
+      "current_keyfile_prompt": "Sube tu archivo de clave actual",
+      "rotate_explainer": "Esto invalida el archivo de clave anterior y genera uno nuevo. Hazlo si perdiste el archivo o crees que pudo verse comprometido. Solo se requiere tu contraseña.",
+      "remove_explainer": "Sin archivo de clave, cualquiera que conozca tu contraseña podrá tomar el control de tu cuenta de inmediato. No hay segunda línea de defensa.",
+      "warning": {
+        "title": "Lee esto. Lo decimos en serio.",
+        "no_email": "Banter no recoge tu correo electrónico ni tu número de teléfono. No hay correo de recuperación ni restablecimiento por SMS.",
+        "no_support": "El equipo de Banter no puede restablecer tu cuenta. No hay soporte que pueda saltarse el archivo de clave. No tenemos esa capacidad — no hay puerta trasera, por diseño.",
+        "no_backup": "Si pierdes la contraseña y el archivo de clave, tu cuenta se pierde para siempre. Tus mensajes, tus servidores, tu lista de amigos — todo.",
+        "attacker": "Si un atacante consigue tu contraseña y tu archivo de clave (por ejemplo, malware en tu equipo o si los subes a un sitio de phishing), tiene tu cuenta. No la recuperarás. No podemos ayudarte.",
+        "ack": "Lo entiendo. Asumo la responsabilidad de guardar mi archivo de clave y mi contraseña de forma segura. No hay recuperación."
+      }
+    },
+    "devices": {
+      "title": "Sesiones activas",
+      "description": "Gestiona los dispositivos donde has iniciado sesión. Revocar una sesión cerrará la sesión en ese dispositivo.",
+      "current": "Actual",
+      "session_prefix": "Sesión ",
+      "started_prefix": "Iniciada ",
+      "ip_hash": "Hash de IP",
+      "revoke": "Revocar",
+      "empty": "Sin sesiones activas",
+      "unknown_device": "Dispositivo desconocido",
+      "ua_join": " en "
+    },
+    "log": {
+      "title": "Registro de seguridad",
+      "description": "Eventos recientes de seguridad en tu cuenta.",
+      "empty": "Aún no hay eventos de seguridad."
+    },
+    "action": {
+      "user_password_change": "Contraseña cambiada",
+      "user_password_reset": "Contraseña restablecida con archivo de clave",
+      "user_keyfile_set": "Archivo de clave generado",
+      "user_keyfile_rotate": "Archivo de clave rotado",
+      "user_keyfile_remove": "Archivo de clave eliminado",
+      "user_new_device_login": "Dispositivo nuevo verificado",
+      "user_session_revoke": "Sesión revocada"
+    }
+  },
+  "settings_accessibility": {
+    "heading": "Accesibilidad",
+    "description": "Ajusta los parámetros visuales para que la app sea más fácil de usar.",
+    "larger_text_label": "Tamaño del texto",
+    "larger_text_description": "Escala el texto de la interfaz del 100% al 150%.",
+    "high_contrast_label": "Alto contraste",
+    "high_contrast_description": "Aumenta el contraste de bordes, texto atenuado y menciones para mejorar la legibilidad.",
+    "invert_colors_label": "Invertir colores",
+    "invert_colors_description": "Invierte toda la interfaz (claro pasa a oscuro y oscuro a claro) manteniendo imágenes y vídeos con colores normales."
   },
   "settings_color_picker": {
     "hex_placeholder": "#000000"
@@ -154,7 +235,9 @@
   },
   "settings_themes": {
     "title": "Apariencia",
-    "description": "Elige cómo se ve la aplicación para ti"
+    "description": "Elige cómo se ve la aplicación para ti",
+    "section_default": "Temas predeterminados",
+    "section_color": "Temas de color"
   },
   "settings_roles": {
     "system_badge": "Sistema",
@@ -204,16 +287,24 @@
     "badge_admin": "Administrador",
     "badge_banned": "Baneado",
     "action_unban": "Desbanear",
-    "action_kick": "Expulsar",
-    "action_ban": "Banear",
-    "action_loading": "..."
+    "action_loading": "...",
+    "more_actions": "Más acciones"
+  },
+  "settings_bans": {
+    "tab_label": "Baneos",
+    "search_placeholder": "Buscar por nombre de usuario, ID o motivo…",
+    "empty": "No hay miembros baneados.",
+    "empty_search": "Ningún baneo coincide con tu búsqueda.",
+    "badge": "Baneado",
+    "reason_label": "Motivo:",
+    "no_reason": "Sin motivo indicado.",
+    "banned_at_template": "Baneado {when}"
   },
   "profile": {
     "preview": "Vista previa",
     "section": {
       "display_name": "Nombre para mostrar",
       "username": "Nombre de usuario",
-      "email": "Correo",
       "password": "Contraseña",
       "bio": "Bio",
       "avatar": "Avatar",
@@ -221,7 +312,6 @@
     },
     "placeholder": {
       "display_name": "Cómo apareces ante los demás (opcional)",
-      "email": "tu@correo.com",
       "current_password": "Contraseña actual",
       "new_password": "Contraseña nueva (mín. 8 caracteres)",
       "bio": "Cuenta a la gente quién eres..."
@@ -231,15 +321,6 @@
       "avatar_formats": "JPG, PNG, GIF o WebP",
       "avatar_max_size": "Máx. 5 MB",
       "banner_dimensions": "Mín. 600×240. Máx. 6 MB."
-    },
-    "email": {
-      "no_email_set": "Sin correo configurado",
-      "change": "Cambiar",
-      "add": "Añadir correo",
-      "send_verification": "Enviar verificación",
-      "sending": "Enviando...",
-      "fallback_success": "Correo de verificación enviado",
-      "fallback_error": "No se ha podido actualizar el correo"
     },
     "password": {
       "change": "Cambiar contraseña",
@@ -264,8 +345,16 @@
     "modal": {
       "settings": "Ajustes",
       "site_admin": "Administrador del sitio",
+      "status_heading": "Estado",
+      "status_online": "En línea",
+      "status_idle": "Ausente",
+      "status_dnd": "No molestar",
+      "status_invisible": "Invisible",
       "home": "Inicio",
-      "sign_out": "Cerrar sesión"
+      "sign_out": "Cerrar sesión",
+      "mark_all_read": "Marcar todo como leído",
+      "copy_user_id": "Copiar ID de usuario",
+      "back": "Atrás"
     },
     "menu_button": {
       "more_title": "Más",
@@ -416,14 +505,14 @@
     "list": {
       "create_channel_in_category_title": "Crear canal en la categoría",
       "create_channel_title": "Crear canal",
-      "uncategorized": "Sin categoría",
       "no_channels": "Sin canales",
       "create_category": "Crear categoría"
     },
     "view": {
       "members_title": "Miembros",
       "viewing_history_prefix": "Viendo mensajes anteriores — ",
-      "jump_to_present": "Ir al presente"
+      "jump_to_present": "Ir al presente",
+      "create_thread": "Crear hilo"
     },
     "create_modal": {
       "title": "Crear canal",
@@ -444,7 +533,20 @@
       "fullscreen_title": "Ajustes del canal",
       "placeholder_name": "nombre-del-canal",
       "label_category": "Categoría",
-      "no_category": "Sin categoría"
+      "no_category": "Sin categoría",
+      "label_slowmode": "Modo lento",
+      "slowmode_hint": "Cada miembro podrá enviar un mensaje cada cierto intervalo. No afecta a los moderadores.",
+      "slowmode_off": "Desactivado",
+      "slowmode_5s": "5 segundos",
+      "slowmode_10s": "10 segundos",
+      "slowmode_30s": "30 segundos",
+      "slowmode_1m": "1 minuto",
+      "slowmode_5m": "5 minutos",
+      "slowmode_15m": "15 minutos",
+      "slowmode_30m": "30 minutos",
+      "slowmode_1h": "1 hora",
+      "slowmode_2h": "2 horas",
+      "slowmode_6h": "6 horas"
     },
     "members_sidebar": {
       "header_template": "Miembros — {n}",
@@ -465,11 +567,83 @@
       "placeholder_name": "Nombre de la categoría"
     }
   },
+  "webhooks": {
+    "tab": {
+      "title": "Webhooks",
+      "description": "Los webhooks permiten que servicios externos publiquen mensajes en este canal. Cada webhook tiene su propia URL — pégala en cualquier servicio que admita HTTP POST.",
+      "create_section": "Crear nuevo webhook",
+      "create_placeholder": "ej. Notificaciones de GitHub",
+      "btn_create": "Crear",
+      "btn_creating": "…",
+      "empty": "Aún no hay webhooks en este canal.",
+      "disabled_badge": "Desactivado",
+      "used_template": "Usado {n} veces",
+      "last_template": "Último {when}",
+      "btn_rename": "Renombrar",
+      "btn_regenerate": "Regenerar token",
+      "btn_enable": "Activar",
+      "btn_disable": "Desactivar",
+      "btn_delete": "Eliminar",
+      "btn_save": "Guardar",
+      "btn_cancel": "Cancelar",
+      "btn_copy_url": "Copiar URL",
+      "btn_copied": "Copiado",
+      "url_missing": "Regenera el token para obtener la URL"
+    }
+  },
+  "threads": {
+    "list": {
+      "new_thread": "Nuevo hilo",
+      "create_thread_title": "Crear hilo",
+      "archived_count_template": "{n} archivados"
+    },
+    "header": {
+      "back": "Padre",
+      "back_title": "Volver al canal padre",
+      "archived_badge": "Archivado",
+      "archive": "Archivar",
+      "unarchive": "Desarchivar",
+      "delete": "Eliminar"
+    },
+    "create_modal": {
+      "title": "Crear hilo",
+      "subtitle": "Nuevo hilo en este canal",
+      "subtitle_from_message": "Discusión derivada de este mensaje",
+      "label_name": "Nombre del hilo",
+      "placeholder_name": "comentarios-de-diseño",
+      "btn_create": "Crear",
+      "btn_creating": "Creando…",
+      "no_parent": "Sin canal padre",
+      "fail": "No se pudo crear el hilo"
+    }
+  },
   "guild_rail": {
     "dm_title": "Mensajes directos"
   },
   "emoji_picker": {
     "autocomplete_title": "Emoji que coincide"
+  },
+  "emoji_settings": {
+    "tab_label": "Emojis",
+    "heading": "Emojis del servidor",
+    "subtitle_template": "{count} de {limit} usados",
+    "upload_heading": "Subir un emoji nuevo",
+    "name_placeholder": "nombre_emoji",
+    "btn_upload": "Subir",
+    "btn_uploading": "Subiendo...",
+    "btn_cancel": "Cancelar",
+    "btn_delete": "Eliminar",
+    "upload_hint_template": "PNG, JPEG, GIF o WebP. Hasta {kb} KB. Formato cuadrado o casi cuadrado funciona mejor.",
+    "empty_title": "Aún no hay emojis",
+    "empty_body": "Sube uno arriba para empezar.",
+    "badge_animated": "Animado",
+    "delete_confirm_template": "¿Eliminar :{name}: de este servidor?",
+    "error_no_file": "Selecciona un archivo primero.",
+    "error_bad_name": "El nombre debe tener 2-32 caracteres y solo letras, dígitos o guion bajo.",
+    "error_too_large_template": "Archivo demasiado grande. Límite {kb} KB.",
+    "error_upload_failed": "Subida fallida.",
+    "error_rename_failed": "Cambio de nombre fallido.",
+    "error_delete_failed": "Eliminación fallida."
   },
   "mention": {
     "autocomplete_users": "Miembros que coinciden",
@@ -486,9 +660,26 @@
     "bool_true": "verdadero",
     "bool_false": "falso"
   },
+  "emoji_tooltip": {
+    "default_origin": "Un emoji predeterminado. Puedes usarlo en cualquier sitio.",
+    "guild_origin_template": "Emoji personalizado de {guild}.",
+    "guild_origin_unknown": "Emoji personalizado."
+  },
   "reactions": {
     "search_placeholder": "Buscar emoji...",
     "no_results": "No se han encontrado emojis",
+    "search_results": "Resultados de búsqueda",
+    "section_server": "Emojis del servidor",
+    "section_default": "Predeterminados",
+    "category_smileys": "Caras y emociones",
+    "category_people": "Personas y cuerpo",
+    "category_animals": "Animales y naturaleza",
+    "category_food": "Comida y bebida",
+    "category_activities": "Actividades",
+    "category_travel": "Viajes y lugares",
+    "category_objects": "Objetos",
+    "category_symbols": "Símbolos",
+    "category_flags": "Banderas",
     "add_title": "Añadir reacción",
     "tooltip_count_template": "{count} reaccionaron con {emoji}",
     "tooltip_one_template": "{name} reaccionó con {emoji}",
@@ -510,8 +701,53 @@
       "deafen": "Ensordecer",
       "undeafen": "Quitar ensordecer",
       "disconnect": "Desconectar",
-      "leave": "Salir"
-    }
+      "leave": "Salir",
+      "mic_select": "Seleccionar dispositivo de entrada",
+      "cam_on": "Activar cámara",
+      "cam_off": "Desactivar cámara",
+      "cam_select": "Seleccionar cámara",
+      "screen_share": "Compartir pantalla",
+      "screen_stop": "Detener compartir pantalla"
+    },
+    "mic_picker": {
+      "title": "Dispositivo de entrada",
+      "system_default": "Predeterminado del sistema",
+      "unnamed_device": "Micrófono",
+      "permission_hint": "Permite el acceso al micrófono para elegir un dispositivo de entrada.",
+      "allow": "Permitir micrófono",
+      "allow_for_names": "Permitir acceso para ver los nombres de los dispositivos",
+      "no_devices": "No se encontraron dispositivos de entrada.",
+      "denied": "El acceso al micrófono está bloqueado. Cambia la configuración del sitio en tu navegador para permitirlo.",
+      "unsupported": "Este navegador no admite enumerar dispositivos de audio."
+    },
+    "cam_picker": {
+      "title": "Cámara",
+      "system_default": "Predeterminada del sistema",
+      "unnamed_device": "Cámara",
+      "permission_hint": "Permite el acceso a la cámara para elegir un dispositivo.",
+      "allow": "Permitir cámara",
+      "allow_for_names": "Permitir acceso para ver los nombres de los dispositivos",
+      "no_devices": "No se encontraron cámaras.",
+      "denied": "El acceso a la cámara está bloqueado. Cambia la configuración del sitio en tu navegador para permitirlo.",
+      "unsupported": "Este navegador no admite enumerar cámaras."
+    },
+    "peer_actions": {
+      "force_mute": "Silenciar (servidor)",
+      "unforce_mute": "Quitar silencio (servidor)"
+    },
+    "connection": {
+      "connected": "Voz conectada",
+      "connecting": "Conectando...",
+      "reconnecting": "Reconectando...",
+      "failed": "Conexión fallida"
+    },
+    "panel": {
+      "open_channel": "Abrir canal de voz",
+      "click_to_view": "Haz clic para ver",
+      "return": "Volver al canal"
+    },
+    "connecting_long": "Conectando a voz...",
+    "tap_to_enable_audio": "Toca para activar el audio"
   },
   "typing": {
     "one_template": "{a} está escribiendo",
@@ -536,7 +772,8 @@
     "permission_hint_suffix": " en el servidor.",
     "btn_back": "Atrás",
     "btn_authorize": "Autorizar",
-    "btn_authorizing": "Autorizando…"
+    "btn_authorizing": "Autorizando…",
+    "no_perms_requested": "No se solicitan permisos adicionales."
   },
   "messages": {
     "system_user_join": "se ha unido al servidor.",
@@ -547,8 +784,17 @@
     "input_placeholder_channel_template": "Mensaje a #{name}",
     "input_btn_send": "Enviar",
     "input_attach_file": "Adjuntar archivo",
+    "input_record_voice": "Enviar mensaje de voz",
+    "voice_stop": "Detener",
+    "voice_send": "Enviar",
+    "voice_play": "Reproducir mensaje de voz",
+    "voice_pause": "Pausar mensaje de voz",
+    "voice_error_recorder_unsupported": "La grabación de voz no es compatible con este navegador.",
+    "voice_error_recorder_denied": "Acceso al micrófono denegado.",
+    "message_unavailable": "Mensaje de voz no disponible",
     "input_remove_file": "Quitar",
     "input_drop_to_attach": "Suelta el archivo para adjuntarlo",
+    "input_drop_hint": "Los archivos se adjuntan a tu mensaje en este canal",
     "input_uploading": "Subiendo...",
     "input_uploading_progress_template": "Subiendo {current}/{total}",
     "input_files_count_template": "{current}/{max} archivos",
@@ -564,11 +810,15 @@
     "input_blocked_by_me": "Has bloqueado a este usuario.",
     "input_blocked_by_peer": "No puedes enviar mensajes a este usuario.",
     "input_no_permission": "No tienes permiso para enviar mensajes en este canal.",
+    "input_slowmode_active": "Modo lento activado — espera antes de enviar de nuevo",
+    "input_slowmode_hint": "Modo lento activado — {duration}",
+    "input_slowmode_hint_immune": "Modo lento activado — {duration} — tú estás exento",
     "input_replying_to_prefix": "Respondiendo a ",
     "input_cancel_reply": "Cancelar respuesta",
     "list_welcome_template": "Bienvenido a #{name}",
     "list_welcome_body": "Este es el principio del canal. ¡Envía el primer mensaje!",
     "list_reply_deleted": "El mensaje original se ha eliminado",
+    "list_reply_attachment_only": "Haz clic para ver el adjunto",
     "list_edited_marker": "(editado)",
     "list_edited_tooltip": "Este mensaje se ha editado",
     "list_failed_to_send": "Envío fallido",
@@ -620,6 +870,25 @@
     "bot_header_invite": "Invitar a un bot a un servidor",
     "bot_btn_add": "Añadir al servidor"
   },
+  "gifs": {
+    "search_placeholder": "Buscar en Tenor",
+    "tab_trending": "Tendencias",
+    "tab_favorites": "Favoritos",
+    "tab_new": "Pestaña nueva",
+    "tab_delete": "Eliminar pestaña",
+    "tab_name_placeholder": "Nombre de la pestaña",
+    "tab_rename_hint_template": "{name} (doble clic para renombrar)",
+    "loading": "Cargando…",
+    "empty_search": "No se encontraron GIFs.",
+    "empty_favorites": "Aún no hay nada guardado aquí.",
+    "error_trending_failed": "No se pudieron cargar las tendencias",
+    "error_search_failed": "Búsqueda fallida",
+    "action_save": "Guardar",
+    "action_unsave": "Quitar de favoritos",
+    "action_move": "Mover a pestaña",
+    "menu_save_to": "Guardar en",
+    "menu_move_to": "Mover a"
+  },
   "media": {
     "audio_unavailable": "Audio no disponible",
     "video_unavailable": "Vídeo no disponible",
@@ -660,7 +929,12 @@
     "tristate_inherit_title": "Heredar (haz clic para permitir)",
     "tristate_legend_inherit": "Heredar",
     "tristate_legend_allow": "Permitir",
-    "tristate_legend_deny": "Denegar"
+    "tristate_legend_deny": "Denegar",
+    "file_upload": {
+      "choose_file": "Haz clic para elegir un archivo, o arrastra y suelta",
+      "drop_here": "Suelta para subir",
+      "reading": "Leyendo…"
+    }
   },
   "contextmenu": {
     "copy_category_id": "Copiar ID de la categoría",
@@ -670,9 +944,15 @@
     "edit_channel": "Editar canal",
     "delete_channel": "Eliminar canal",
     "mark_as_read": "Marcar como leído",
+    "mark_server_as_read": "Marcar servidor como leído",
+    "mute_server": "Silenciar servidor",
+    "mute_channel": "Silenciar canal",
+    "notification_settings": "Ajustes de notificaciones",
+    "duplicate_channel": "Duplicar canal",
     "join_voice_channel": "Unirse al canal de voz",
     "copy_media_url": "Copiar URL del archivo",
     "copy_media_url_n_template": "Copiar URL del archivo ({n})",
+    "add_reaction": "Añadir reacción",
     "copy_message": "Copiar mensaje",
     "copy_message_id": "Copiar ID del mensaje",
     "copy_user_id": "Copiar ID del usuario",
@@ -687,9 +967,28 @@
     "report_message": "Reportar mensaje",
     "report_message_target_template": "mensaje de @{username}",
     "user_message": "Mensaje",
+    "view_profile": "Ver perfil",
     "kick_from_server": "Expulsar del servidor",
     "ban_from_server": "Banear del servidor",
-    "report_user": "Reportar usuario"
+    "report_user": "Reportar usuario",
+    "transfer_ownership": "Transferir propiedad",
+    "terminate_user": "Terminar usuario",
+    "create_thread": "Crear hilo",
+    "copy_thread_id": "Copiar ID del hilo",
+    "archive_thread": "Archivar hilo",
+    "unarchive_thread": "Desarchivar hilo",
+    "delete_thread": "Eliminar hilo"
+  },
+  "mute_modal": {
+    "title_guild": "Silenciar servidor",
+    "title_channel": "Silenciar canal",
+    "preset_15m": "Durante 15 minutos",
+    "preset_1h": "Durante 1 hora",
+    "preset_4h": "Durante 4 horas",
+    "preset_24h": "Durante 24 horas",
+    "preset_forever": "Hasta que lo reactive",
+    "unmute": "Reactivar",
+    "fail": "No se pudo actualizar el silencio. Inténtalo de nuevo."
   },
   "guilds": {
     "invite_uses_template": "{n} usos",
@@ -713,6 +1012,7 @@
     "dropdown_fallback_name": "Servidor",
     "selector_create_title": "Crear un servidor",
     "selector_join_title": "Unirse a un servidor",
+    "selector_discover_title": "Descubrir servidores",
     "create_modal_title": "Crear un servidor",
     "create_modal_subtitle": "Tu servidor es donde tú y tus amigos os reunís",
     "create_modal_label_name": "Nombre del servidor",
@@ -789,7 +1089,23 @@
     "settings_tab_overview": "Resumen",
     "settings_tab_invites": "Invitaciones",
     "settings_tab_discovery": "Descubrir",
+    "settings_tab_audit_log": "Registro de auditoría",
     "settings_tab_delete": "Eliminar servidor",
+    "settings_tab_nickname": "Apodo",
+    "transfer_modal_title": "Transferir propiedad",
+    "transfer_modal_subtitle": "Perderás los permisos de propietario de inmediato. No se puede deshacer sin la cooperación de la otra persona.",
+    "transfer_modal_warning_prefix": "Confirma la transferencia a ",
+    "transfer_modal_warning_suffix": ". Introduce tu contraseña para continuar.",
+    "transfer_modal_password_placeholder": "Tu contraseña",
+    "transfer_modal_btn_confirm": "Transferir propiedad",
+    "transfer_modal_btn_busy": "Transfiriendo…",
+    "transfer_modal_fail": "Transferencia fallida.",
+    "nickname_label": "Apodo en el servidor",
+    "nickname_placeholder": "Cómo apareces en este servidor",
+    "nickname_hint": "Déjalo vacío para usar tu nombre para mostrar global.",
+    "nickname_save": "Guardar",
+    "nickname_saving": "Guardando…",
+    "nickname_saved": "Guardado",
     "settings_danger_heading": "Eliminar servidor",
     "settings_danger_body_prefix": "Esto elimina permanentemente todos los canales, mensajes y datos. Escribe ",
     "settings_danger_body_suffix": " para confirmar.",
@@ -864,19 +1180,18 @@
     "tab_overview": "Resumen",
     "tab_reports": "Reportes",
     "tab_users": "Usuarios",
+    "tab_bots": "Bots",
     "tab_guilds": "Servidores",
     "tab_listings": "Listados",
-    "tab_bans": "Baneos",
+    "tab_terminations": "Terminaciones",
     "stats_heading": "Resumen",
     "stats_subtitle": "Estadísticas globales del sitio. Se actualizan en directo.",
     "stats_online_now": "En línea ahora",
+    "stats_online_web": "Usuarios web en línea",
+    "stats_online_desktop": "Usuarios de escritorio en línea",
     "stats_total_users": "Usuarios totales",
-    "stats_active": "Activos",
-    "stats_banned": "Baneados",
     "stats_guilds": "Servidores",
     "stats_messages": "Mensajes",
-    "stats_pct_of_users_template": "{pct} de los usuarios",
-    "stats_pct_of_total_template": "{pct} del total",
     "users_heading": "Usuarios",
     "users_total_template": "{n} en total",
     "users_search_placeholder": "Buscar nombre de usuario...",
@@ -887,15 +1202,68 @@
     "users_col_status": "Estado",
     "users_col_action": "Acción",
     "users_badge_admin": "Administrador",
-    "users_btn_unban": "Desbanear",
-    "users_btn_ban": "Banear",
+    "users_btn_restore": "Restaurar",
+    "users_btn_terminate": "Terminar",
+    "users_filter_all": "Todos",
+    "users_filter_online": "En línea",
+    "users_filter_offline": "Desconectados",
+    "users_filter_banned": "Baneados",
+    "users_sort_label": "Ordenar por",
+    "users_sort_name_asc": "Nombre A–Z",
+    "users_sort_name_desc": "Nombre Z–A",
+    "users_sort_created_desc": "Más recientes primero",
+    "users_sort_created_asc": "Más antiguos primero",
+    "bots_heading": "Bots",
+    "bots_search_placeholder": "Buscar por bot o nombre del propietario...",
+    "bots_empty": "No se han encontrado bots.",
+    "bots_col_bot": "Bot",
+    "bots_col_owner": "Propietario",
+    "bots_col_guilds": "Servidores",
+    "bots_col_created": "Creado",
+    "bots_badge_verified": "Verificado",
+    "bots_mobile_guilds_template": "en {n} servidor(es)",
+    "bots_filter_all": "Todos",
+    "bots_filter_online": "En línea",
+    "bots_filter_offline": "Desconectados",
+    "bots_filter_banned": "Terminados",
+    "bots_filter_verified": "Verificados",
+    "bots_filter_unverified": "Sin verificar",
+    "bots_sort_name_asc": "Nombre A–Z",
+    "bots_sort_name_desc": "Nombre Z–A",
+    "bots_sort_created_desc": "Más recientes primero",
+    "bots_sort_created_asc": "Más antiguos primero",
+    "bots_sort_guilds_desc": "Más servidores",
+    "bot_card_not_found": "Aplicación de bot no encontrada.",
+    "bot_card_no_description": "Sin descripción.",
+    "bot_card_row_owner": "Propietario",
+    "bot_card_row_app_id": "ID de aplicación",
+    "bot_card_row_bot_user_id": "ID de usuario bot",
+    "bot_card_row_guilds": "Servidores",
+    "bot_card_row_verified": "Verificado",
+    "bot_card_row_status": "Estado",
+    "bot_card_row_created": "Creado",
+    "bot_card_yes": "Sí",
+    "bot_card_no": "No",
+    "bot_card_btn_terminate": "Terminar bot",
+    "bot_card_btn_restore": "Restaurar bot",
     "guilds_heading": "Servidores",
     "guilds_search_placeholder": "Buscar nombre de servidor...",
     "guilds_empty": "No se han encontrado servidores.",
+    "guilds_filter_all": "Todos",
+    "guilds_filter_active": "Activos",
+    "guilds_filter_empty": "Vacíos",
+    "guilds_sort_name_asc": "Nombre A–Z",
+    "guilds_sort_name_desc": "Nombre Z–A",
+    "guilds_sort_created_desc": "Más recientes primero",
+    "guilds_sort_created_asc": "Más antiguos primero",
+    "guilds_sort_members_desc": "Más miembros",
+    "guilds_sort_messages_desc": "Más mensajes",
     "guilds_col_name": "Nombre",
     "guilds_col_members": "Miembros",
     "guilds_col_messages": "Mensajes",
     "guilds_col_created": "Creado",
+    "guilds_mobile_msgs_template": "{n} msj",
+    "listings_mobile_bumps_template": "{n} empujones",
     "guild_card_not_found": "Servidor no encontrado.",
     "guild_card_row_owner": "Propietario",
     "guild_card_row_guild_id": "ID del servidor",
@@ -910,16 +1278,16 @@
     "guild_card_btn_terminate": "Terminar servidor",
     "guild_card_btn_terminating": "Terminando…",
     "guild_card_btn_confirm_terminate": "Confirmar terminación",
-    "bans_heading": "Baneos globales del sitio",
-    "bans_search_placeholder": "Buscar por nombre de usuario, ID o motivo...",
-    "bans_col_user_reason": "Usuario / Motivo",
-    "bans_col_banned": "Baneado",
-    "bans_col_action": "Acción",
-    "bans_unknown_user": "(desconocido)",
-    "bans_reason_label": "Motivo:",
-    "bans_no_reason_given": "sin motivo dado",
-    "bans_by_username_template": "por @{username}",
-    "bans_empty": "Sin baneos activos.",
+    "terminations_heading": "Terminaciones",
+    "terminations_search_placeholder": "Buscar por nombre, ID o motivo...",
+    "terminations_col_user_reason": "Usuario / Motivo",
+    "terminations_col_terminated": "Terminado",
+    "terminations_col_action": "Acción",
+    "terminations_unknown_user": "(desconocido)",
+    "terminations_reason_label": "Motivo:",
+    "terminations_no_reason_given": "sin motivo dado",
+    "terminations_by_username_template": "por @{username}",
+    "terminations_empty": "Sin terminaciones activas.",
     "listings_heading": "Listados de descubrimiento",
     "listings_search_placeholder": "Buscar slug o bio...",
     "listings_empty": "No hay listados publicados.",
@@ -946,7 +1314,37 @@
     "report_card_empty_message": "(mensaje vacío)",
     "report_card_no_bio": "Sin bio",
     "report_card_unknown_guild": "(servidor desconocido)",
-    "report_card_guild_meta_template": "{members} miembros · Propietario: @{owner}"
+    "report_card_guild_meta_template": "{members} miembros · Propietario: @{owner}",
+    "reports_filter_open": "Abiertas",
+    "reports_filter_resolved": "Resueltas",
+    "reports_filter_all": "Todas",
+    "reports_status_open": "Abierta",
+    "reports_status_resolved": "Resuelta",
+    "reports_action_dismiss": "Descartada",
+    "reports_action_ban_user": "Usuario baneado",
+    "reports_action_delete_message": "Mensaje eliminado",
+    "reports_btn_view_details": "Ver detalles",
+    "reports_btn_delete_message": "Eliminar mensaje",
+    "reports_btn_warn_user": "Advertir al usuario",
+    "reports_btn_suspend_user": "Suspender al usuario",
+    "reports_btn_open_guild": "Abrir tarjeta del servidor",
+    "reports_btn_copy_id": "Copiar ID",
+    "reports_btn_more": "Más acciones",
+    "reports_btn_view_in_audit": "Ver en el registro de auditoría",
+    "reports_modal_subtitle_template": "Reporte {type} · presentado {time}",
+    "reports_modal_section_message_author": "Autor del mensaje",
+    "reports_modal_section_target_user": "Usuario reportado",
+    "reports_modal_section_target_guild": "Servidor reportado",
+    "reports_label_when": "Cuándo",
+    "reports_modal_title_template": "Reporte {short_id}",
+    "reports_modal_section_target": "Objetivo",
+    "reports_modal_section_reason": "Motivo",
+    "reports_modal_section_reporter": "Quien reporta",
+    "reports_modal_section_resolution": "Resolución",
+    "reports_modal_no_reason": "Sin motivo proporcionado.",
+    "reports_modal_resolved_by_template": "Resuelta por @{name}",
+    "reports_modal_action_label": "Acción tomada",
+    "reports_modal_close": "Cerrar"
   },
   "developers": {
     "page_title": "Desarrolladores",
@@ -1013,6 +1411,134 @@
     "token_modal_btn": "Lo he guardado",
     "confirm_modal_default_btn": "Confirmar",
     "confirm_modal_busy": "Trabajando…",
-    "confirm_modal_error_fallback": "Acción fallida"
+    "confirm_modal_error_fallback": "Acción fallida",
+    "tab_commands": "Comandos",
+    "section_avatar": "Avatar del bot",
+    "section_banner": "Banner del bot",
+    "label_display_name": "Nombre para mostrar",
+    "placeholder_display_name": "Nombre público mostrado en el chat",
+    "display_name_hint": "Se muestra en mensajes y listas de miembros. Por defecto se usa el nombre del bot si está vacío.",
+    "label_bio": "Acerca de",
+    "placeholder_bio": "¿Qué hace este bot?",
+    "bio_hint": "Se muestra en la tarjeta de perfil del bot.",
+    "commands_heading": "Comandos de barra",
+    "commands_subtitle": "Comandos que este bot ha registrado en el servidor.",
+    "commands_empty": "Aún no hay comandos registrados.",
+    "commands_empty_hint": "Usa bot.slash_command(...) en tu SDK y el bot las sincronizará en la próxima conexión.",
+    "token_show": "Mostrar",
+    "token_hide": "Ocultar"
+  },
+  "auditlog": {
+    "heading": "Registro de auditoría",
+    "entries_count_template": "{n} entradas",
+    "export_btn": "Exportar",
+    "filter_all_actions": "Todas las acciones",
+    "filter_actor_placeholder": "Filtrar por ID de usuario actor",
+    "filter_target_placeholder": "Filtrar por ID del objetivo",
+    "empty": "Ninguna entrada del registro coincide con estos filtros.",
+    "reason_label": "Motivo:",
+    "metadata_summary": "Metadatos",
+    "placeholder": {
+      "unknown_actor": "Actor desconocido",
+      "unknown_user": "Usuario desconocido",
+      "no_name": "(sin nombre)"
+    },
+    "time": {
+      "just_now": "ahora mismo",
+      "seconds_ago_template": "hace {n}s",
+      "minutes_ago_template": "hace {n}m",
+      "hours_ago_template": "hace {n}h",
+      "today_at_template": "hoy a las {time}",
+      "yesterday_at_template": "ayer a las {time}"
+    },
+    "tpl": {
+      "fallback": "{actor} ha realizado una acción",
+      "user_ban": "{actor} ha baneado a {target}",
+      "user_unban": "{actor} ha desbaneado a {target}",
+      "user_delete": "{actor} ha eliminado la cuenta {target}",
+      "user_suspend": "{actor} ha suspendido a {target} hasta {until}",
+      "user_unsuspend": "{actor} ha quitado la suspensión a {target}",
+      "user_warn": "{actor} ha advertido a {target} (severidad {severity})",
+      "user_promote": "{actor} ha promovido a {target} a administrador del sitio",
+      "user_demote": "{actor} ha degradado a {target} de administrador del sitio",
+      "user_force_logout": "{actor} ha cerrado la sesión forzosamente de {target}",
+      "user_kick": "{actor} ha expulsado a {target}",
+      "user_timeout": "{actor} ha aislado a {target}",
+      "user_nick_change": "{actor} ha cambiado el apodo de {target}",
+      "guild_suspend": "{actor} ha suspendido este servidor",
+      "guild_unsuspend": "{actor} ha quitado la suspensión a este servidor",
+      "guild_terminate": "{actor} ha terminado este servidor",
+      "guild_settings_update": "{actor} ha actualizado los ajustes del servidor",
+      "guild_vanity_set": "{actor} ha definido la URL personalizada como {name}",
+      "guild_vanity_remove": "{actor} ha eliminado la URL personalizada",
+      "guild_vanity_force_clear": "{actor} ha borrado forzosamente la URL personalizada",
+      "guild_owner_transfer": "{actor} ha transferido la propiedad a {new_owner}",
+      "guild_ban_add": "{actor} ha baneado a {target} del servidor",
+      "guild_ban_remove": "{actor} ha desbaneado a {target} del servidor",
+      "channel_create": "{actor} ha creado el canal {name}",
+      "channel_update": "{actor} ha actualizado el canal {name}",
+      "channel_delete": "{actor} ha eliminado el canal {name}",
+      "channel_permission_update": "{actor} ha actualizado los permisos del canal {name}",
+      "category_create": "{actor} ha creado la categoría {name}",
+      "category_update": "{actor} ha actualizado la categoría {name}",
+      "category_delete": "{actor} ha eliminado la categoría {name}",
+      "member_kick": "{actor} ha expulsado a {target}",
+      "member_role_add": "{actor} ha añadido el rol {role_name} a {target}",
+      "member_role_remove": "{actor} ha quitado el rol {role_name} a {target}",
+      "thread_create": "{actor} ha creado el hilo {name}",
+      "thread_archive": "{actor} ha archivado el hilo {name}",
+      "thread_unarchive": "{actor} ha desarchivado el hilo {name}",
+      "thread_delete": "{actor} ha eliminado el hilo {name}",
+      "role_create": "{actor} ha creado el rol {name}",
+      "role_update": "{actor} ha actualizado el rol {name}",
+      "role_delete": "{actor} ha eliminado el rol {name}",
+      "webhook_create": "{actor} ha creado un webhook",
+      "webhook_update": "{actor} ha actualizado un webhook",
+      "webhook_delete": "{actor} ha eliminado un webhook",
+      "message_delete": "{actor} ha eliminado un mensaje",
+      "message_purge": "{actor} ha purgado mensajes",
+      "vanity_reserve": "{actor} ha reservado la URL personalizada {name}",
+      "report_resolve": "{actor} ha resuelto un reporte ({action})"
+    },
+    "action_label": {
+      "user_ban": "Usuario baneado",
+      "user_unban": "Usuario desbaneado",
+      "user_delete": "Usuario eliminado",
+      "user_suspend": "Usuario suspendido",
+      "user_unsuspend": "Suspensión quitada",
+      "user_warn": "Usuario advertido",
+      "user_promote": "Usuario promovido",
+      "user_demote": "Usuario degradado",
+      "user_force_logout": "Sesión forzosa cerrada",
+      "report_resolve": "Reporte resuelto",
+      "guild_terminate": "Servidor terminado",
+      "guild_suspend": "Servidor suspendido",
+      "guild_unsuspend": "Suspensión del servidor quitada",
+      "guild_vanity_force_clear": "URL personalizada borrada por la fuerza",
+      "vanity_reserve": "URL personalizada reservada",
+      "channel_create": "Canal creado",
+      "channel_update": "Canal actualizado",
+      "channel_delete": "Canal eliminado",
+      "category_create": "Categoría creada",
+      "category_update": "Categoría actualizada",
+      "category_delete": "Categoría eliminada",
+      "role_create": "Rol creado",
+      "role_update": "Rol actualizado",
+      "role_delete": "Rol eliminado",
+      "thread_create": "Hilo creado",
+      "thread_delete": "Hilo eliminado",
+      "guild_settings_update": "Ajustes del servidor actualizados",
+      "guild_owner_transfer": "Propiedad transferida",
+      "guild_vanity_set": "URL personalizada definida",
+      "guild_vanity_remove": "URL personalizada eliminada",
+      "guild_ban_add": "Miembro baneado",
+      "guild_ban_remove": "Miembro desbaneado",
+      "member_kick": "Miembro expulsado",
+      "member_role_add": "Rol añadido al miembro",
+      "member_role_remove": "Rol quitado al miembro",
+      "webhook_create": "Webhook creado",
+      "webhook_update": "Webhook actualizado",
+      "webhook_delete": "Webhook eliminado"
+    }
   }
 }

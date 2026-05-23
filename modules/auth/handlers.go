@@ -11,6 +11,7 @@ import (
 	"ror/modules/encryption"
 	"ror/modules/keyfile"
 	"ror/modules/logger"
+	"ror/modules/conf"
 	"ror/modules/usernames"
 )
 
@@ -46,15 +47,15 @@ func (s *Service) Register(c echo.Context) error {
 		return c.JSON(500, echo.Map{"error": ErrHashFailed.Error()})
 	}
 	userKey := encryption.GenerateKey()
-	encUserKey, err := encryption.EncryptUserKey(userKey, s.authCfg.MasterKey)
+	encUserKey, err := encryption.EncryptUserKey(userKey, conf.MasterKey)
 	if err != nil {
 		return c.JSON(500, echo.Map{"error": ErrServerError.Error()})
 	}
-	usernameHash := encryption.HashIdentifier(req.Username, s.authCfg.MasterKey)
 	encUsername, err := encryption.Encrypt(req.Username, userKey)
 	if err != nil {
 		return c.JSON(500, echo.Map{"error": ErrServerError.Error()})
 	}
+	usernameHash := encryption.HashIdentifier(req.Username, conf.MasterKey)
 	if s.users.IsUsernameReserved(usernameHash) {
 		return c.JSON(409, echo.Map{"error": ErrUsernameTaken.Error()})
 	}
@@ -90,7 +91,7 @@ func (s *Service) Login(c echo.Context) error {
 		return c.JSON(400, echo.Map{"error": ErrInvalidRequest.Error()})
 	}
 	req.Username = usernames.Sanitize(req.Username)
-	usernameHash := encryption.HashIdentifier(req.Username, s.authCfg.MasterKey)
+	usernameHash := encryption.HashIdentifier(req.Username, conf.MasterKey)
 	user, err := s.users.GetUserByUsername(usernameHash)
 	if err != nil {
 		return c.JSON(401, echo.Map{"error": ErrInvalidCredentials.Error()})

@@ -4,8 +4,11 @@ import Spinner from '../ui/Spinner';
 import { ShieldIcon } from '../icons';
 import { usePermEvents } from '../../hooks/usePermEvents';
 import { apiListMyWarnings, apiAcknowledgeWarning } from '../../api/me_warnings';
+import { useT } from '../../hooks/useT';
+import { TERMS_URL } from '../../config';
 
 export default function WarningModal({ user }) {
+  const t = useT();
   const [queue, setQueue] = useState([]);
   const [busy, setBusy] = useState(false);
 
@@ -50,18 +53,18 @@ export default function WarningModal({ user }) {
     <Modal isOpen={true} onClose={() => {}} size="md">
       <ModalHeader
         icon={<ShieldIcon className="w-5 h-5" />}
-        title="You've been warned"
-        subtitle={`Severity ${current.severity} of 5`}
+        title={t('warning_modal.title')}
+        subtitle={t('warning_modal.severity_template', { n: current.severity })}
       />
 
       <div className="space-y-3">
         <p className="text-[13px] text-white/70 leading-relaxed">
-          You have been warned by the official BanterChat admins. Please be sure to follow our terms of service.
+          {t('warning_modal.body')}
         </p>
 
         {current.reasons.length > 0 && (
           <div className="rounded-lg bg-red-500/[0.06] border border-red-500/20 p-3">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-red-400/70 mb-1.5">Reasons</div>
+            <div className="text-[10px] font-bold uppercase tracking-wider text-red-400/70 mb-1.5">{t('warning_modal.reasons_heading')}</div>
             <ul className="text-[13px] text-white/80 list-disc list-inside space-y-1">
               {current.reasons.map((r, i) => <li key={i}>{r}</li>)}
             </ul>
@@ -70,14 +73,16 @@ export default function WarningModal({ user }) {
 
         {current.note && (
           <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-3">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1.5">Additional Note</div>
+            <div className="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1.5">{t('warning_modal.note_heading')}</div>
             <p className="text-[13px] text-white/70 leading-relaxed whitespace-pre-wrap break-words">{current.note}</p>
           </div>
         )}
 
-        <p className="text-[12px] text-white/40">
-          Read our terms at <a href="https://banterchat.org/terms" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline">banterchat.org/terms</a>.
-        </p>
+        {TERMS_URL && (
+          <p className="text-[12px] text-white/40">
+            {t('warning_modal.terms_prefix')} <a href={TERMS_URL} target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline">{TERMS_URL.replace(/^https?:\/\//, '')}</a>
+          </p>
+        )}
       </div>
 
       <div className="flex gap-2 mt-4 pt-3 border-t border-white/[0.06]">
@@ -86,7 +91,7 @@ export default function WarningModal({ user }) {
           disabled={busy}
           className="flex-1 px-4 py-2 rounded-md text-[13px] font-semibold bg-red-500 hover:bg-red-600 text-white disabled:opacity-40"
         >
-          {busy ? <Spinner /> : queue.length > 1 ? `I Understand (${queue.length} pending)` : 'I Understand'}
+          {busy ? <Spinner /> : queue.length > 1 ? t('warning_modal.ack_template', { n: queue.length }) : t('warning_modal.ack')}
         </button>
       </div>
     </Modal>

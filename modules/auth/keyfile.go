@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/labstack/echo/v4"
+	"ror/modules/conf"
 	"ror/modules/keyfile"
 )
 
@@ -10,7 +11,7 @@ func (s *Service) KeyfileHandlers() *keyfile.Handlers {
 		DB:                s.db,
 		KeyfileSvc:        s.keyfile,
 		Audit:             s.audit,
-		MasterKey:         s.authCfg.MasterKey,
+		MasterKey:         conf.MasterKey,
 		HashIP:            s.hashIP,
 		UpdateLastLoginIP: s.users.UpdateLastLoginIP,
 		SetSession:        s.setSession,

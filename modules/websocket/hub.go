@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"ror/modules/conf"
 	"ror/modules/logger"
 	"ror/modules/ratelimit"
 )
@@ -111,8 +112,8 @@ func (h *Hub) intentForEvent(eventType string) int64 {
 }
 
 func NewHub(cfg Config, rateLimits ratelimit.Limits, limiter RateLimiter) *Hub {
-	allowed := make(map[string]struct{}, len(cfg.AllowedOrigins))
-	for _, o := range cfg.AllowedOrigins {
+	allowed := make(map[string]struct{}, len(conf.AllowedOrigins))
+	for _, o := range conf.AllowedOrigins {
 		allowed[o] = struct{}{}
 	}
 	strictOrigin := func(r *http.Request) bool {

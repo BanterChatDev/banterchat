@@ -10,7 +10,7 @@ assets/media/avatars/
 assets/media/banners/
 assets/media/guild_avatars/
 assets/media/guild_banners/
-
+pgdata
 node_modules/
 
 main

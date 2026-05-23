@@ -153,6 +153,16 @@
       "gem": "Gem"
     }
   },
+  "warning_modal": {
+    "title": "You've been warned",
+    "severity_template": "Severity {n} of 5",
+    "body": "You have been warned by the server admins. Please follow the terms of service.",
+    "reasons_heading": "Reasons",
+    "note_heading": "Additional Note",
+    "terms_prefix": "Read the terms at",
+    "ack": "I Understand",
+    "ack_template": "I Understand ({n} pending)"
+  },
   "notifications": {
     "banned": "You have been banned",
     "suspended": "Your account has been suspended",

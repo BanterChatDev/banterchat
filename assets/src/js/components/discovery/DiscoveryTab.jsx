@@ -10,6 +10,7 @@ import { LANGUAGE_OPTIONS, MAX_BIO, MAX_TAGS, slugFromName } from './languages';
 import { useInvites } from '../../hooks/useInvites';
 import { pickReusableInvite } from '../guilds/inviteUtils';
 import { useT } from '../../hooks/useT';
+import { DISCOVERY_URL } from '../../config';
 
 export default function DiscoveryTab({ guild }) {
   const t = useT();
@@ -49,8 +50,12 @@ export default function DiscoveryTab({ guild }) {
         setExisting(null);
         setSlug(slugFromName(guild.name));
       })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [guild?.id]);
 
   useEffect(() => {
@@ -168,7 +173,7 @@ export default function DiscoveryTab({ guild }) {
           <p className="text-[12px] text-red-400/80 bg-red-500/[0.08] border border-red-500/20 rounded-md px-3 py-2">{error}</p>
         )}
 
-    <div className="flex items-center gap-3 pt-2 border-t border-white/[0.04]">
+        <div className="flex items-center gap-3 pt-2 border-t border-white/[0.04]">
           <button
             onClick={handleSave}
             disabled={!canPublish}
@@ -192,9 +197,9 @@ export default function DiscoveryTab({ guild }) {
               <button onClick={() => setConfirmDelete(false)} disabled={saving} className="text-xs text-white/30 hover:text-white/60 transition-colors">{t('common.cancel')}</button>
             </div>
           )}
-          {existing && (
+          {existing && DISCOVERY_URL && (
             <a
-              href={`https://guilds.banterchat.org/${existing.slug}`}
+              href={`${DISCOVERY_URL.replace(/\/$/, '')}/${existing.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[11px] text-[var(--accent)] hover:underline ml-auto"

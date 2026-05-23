@@ -1,5 +1,5 @@
 {
-  "name": "thugchat",
+  "name": "banterchat",
   "scripts": {
     "build:js": "esbuild assets/src/js/index.jsx --bundle --outfile=assets/public/js/app.bundle.js --jsx=automatic --minify --define:process.env.NODE_ENV=\\\"production\\\"",
     "build:css": "tailwindcss -i assets/src/css/main.css -o assets/public/css/app.bundle.css --minify",

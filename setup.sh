@@ -10,6 +10,12 @@ fi
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
+DEPLOY_GO="$ROOT/modules/conf/deploy.go"
+if [ ! -f "$DEPLOY_GO" ]; then
+  echo "modules/conf/deploy.go not found. are you in the repo root?"
+  exit 1
+fi
+
 OS=""
 if [ -f /etc/debian_version ]; then OS=debian
 elif [ -f /etc/redhat-release ]; then OS=redhat
@@ -110,10 +116,102 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
   sleep 1
 done
 
-if [ ! -f "$ROOT/.env" ]; then
-  MASTER_KEY="$(openssl rand -hex 32)"
-  DB_PASSWORD="$(openssl rand -hex 16)"
+read_var() {
+  grep -E "^[[:space:]]+$1[[:space:]]*=" "$DEPLOY_GO" | head -1 | sed -E 's/.*=[[:space:]]*"(.*)"[[:space:]]*$/\1/'
+}
 
+write_string_var() {
+  python3 - "$DEPLOY_GO" "$1" "$2" <<'PYEOF'
+import sys, re
+path, name, val = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(path) as f: src = f.read()
+pat = re.compile(r'(^\s+' + re.escape(name) + r'\s*=\s*)"[^"]*"', re.M)
+new, n = pat.subn(lambda m: m.group(1) + '"' + val + '"', src, count=1)
+if n == 0:
+    sys.stderr.write(f'could not find {name} in {path}\n'); sys.exit(1)
+with open(path, 'w') as f: f.write(new)
+PYEOF
+}
+
+write_bool_var() {
+  python3 - "$DEPLOY_GO" "$1" "$2" <<'PYEOF'
+import sys, re
+path, name, val = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(path) as f: src = f.read()
+pat = re.compile(r'(^\s+' + re.escape(name) + r'\s*=\s*)(true|false)', re.M)
+new, n = pat.subn(lambda m: m.group(1) + val, src, count=1)
+if n == 0:
+    sys.stderr.write(f'could not find {name} in {path}\n'); sys.exit(1)
+with open(path, 'w') as f: f.write(new)
+PYEOF
+}
+
+write_origins() {
+  python3 - "$DEPLOY_GO" "$1" <<'PYEOF'
+import sys, re
+path, domain = sys.argv[1], sys.argv[2]
+with open(path) as f: src = f.read()
+if domain == "localhost":
+    block = ('AllowedOrigins = []string{\n'
+             '\t\t"http://localhost",\n'
+             '\t\t"http://localhost:3030",\n'
+             '\t}')
+else:
+    block = ('AllowedOrigins = []string{\n'
+             '\t\t"https://' + domain + '",\n'
+             '\t\t"http://' + domain + '",\n'
+             '\t\t"http://localhost:3030",\n'
+             '\t}')
+pat = re.compile(r'AllowedOrigins\s*=\s*\[\]string\{[^}]*\}', re.S)
+new, n = pat.subn(block, src, count=1)
+if n == 0:
+    sys.stderr.write('could not find AllowedOrigins block\n'); sys.exit(1)
+with open(path, 'w') as f: f.write(new)
+PYEOF
+}
+
+CURRENT_DOMAIN="$(read_var Domain)"
+CURRENT_MASTER_KEY="$(read_var MasterKey)"
+CURRENT_DB_PASSWORD="$(read_var DBPassword)"
+CURRENT_TERMS_URL="$(read_var TermsURL)"
+CURRENT_LK_URL="$(read_var LiveKitURL)"
+CURRENT_LK_KEY="$(read_var LiveKitAPIKey)"
+CURRENT_LK_SECRET="$(read_var LiveKitAPISecret)"
+CURRENT_TENOR="$(read_var TenorAPIKey)"
+
+echo ""
+echo "=================================================================="
+echo "  banter setup"
+echo "=================================================================="
+echo ""
+
+DEFAULT_DOMAIN="${CURRENT_DOMAIN:-localhost}"
+read -p "domain [$DEFAULT_DOMAIN]: " IN_DOMAIN
+DOMAIN="${IN_DOMAIN:-$DEFAULT_DOMAIN}"
+
+if [ "$DOMAIN" = "localhost" ]; then
+  SECURE="false"
+else
+  read -p "running behind HTTPS? [Y/n]: " IN_HTTPS
+  case "$IN_HTTPS" in
+    n|N|no|NO) SECURE="false" ;;
+    *)         SECURE="true" ;;
+  esac
+fi
+
+DEFAULT_TERMS="$CURRENT_TERMS_URL"
+if [ -z "$DEFAULT_TERMS" ] || [ "$DEFAULT_TERMS" = "https://example.com/terms" ]; then
+  if [ "$SECURE" = "true" ]; then
+    DEFAULT_TERMS="https://$DOMAIN/terms"
+  else
+    DEFAULT_TERMS="http://$DOMAIN/terms"
+  fi
+fi
+read -p "terms-of-service URL [$DEFAULT_TERMS]: " IN_TERMS
+TERMS_URL="${IN_TERMS:-$DEFAULT_TERMS}"
+
+if [ -z "$CURRENT_MASTER_KEY" ]; then
+  MASTER_KEY="$(openssl rand -hex 32)"
   echo ""
   echo "================================================================"
   echo "================================================================"
@@ -130,38 +228,59 @@ if [ ! -f "$ROOT/.env" ]; then
   echo "    There is no recovery. Banter staff cannot help you."
   echo "    Anyone who has it can decrypt your entire server."
   echo ""
-  echo "    It is also saved in ./.env on this machine."
-  echo "    Back up that file too. Never commit it to git."
+  echo "    It is being written into modules/conf/deploy.go on this"
+  echo "    machine. Back up that file too. Never commit it to git."
   echo ""
   echo "================================================================"
   echo "================================================================"
   echo ""
   read -p "    Press enter once you have saved the key. " _
-
-  cat > "$ROOT/.env" <<EOF
-HTTP_ADDR=:3030
-DOMAIN=localhost
-SECURE_COOKIES=false
-MAX_BODY_SIZE=10M
-
-MASTER_KEY=$MASTER_KEY
-
-DB_HOST=127.0.0.1
-DB_PORT=$PGPORT
-DB_USER=$PGUSER
-DB_PASSWORD=$DB_PASSWORD
-DB_NAME=$PGDB
-DB_SSLMODE=disable
-
-LIVEKIT_URL=
-LIVEKIT_API_KEY=
-LIVEKIT_API_SECRET=
-
-TENOR_API_KEY=
-EOF
+else
+  MASTER_KEY="$CURRENT_MASTER_KEY"
+  echo "(keeping existing MasterKey)"
 fi
 
-DB_PASSWORD="$(grep ^DB_PASSWORD= "$ROOT/.env" | cut -d= -f2-)"
+if [ -z "$CURRENT_DB_PASSWORD" ]; then
+  DB_PASSWORD="$(openssl rand -hex 16)"
+else
+  DB_PASSWORD="$CURRENT_DB_PASSWORD"
+fi
+
+echo ""
+read -p "configure LiveKit for voice/video? [y/N]: " IN_LK
+case "$IN_LK" in
+  y|Y|yes|YES)
+    read -p "  LiveKit URL (wss://...) [$CURRENT_LK_URL]: " IN_LK_URL
+    LK_URL="${IN_LK_URL:-$CURRENT_LK_URL}"
+    read -p "  LiveKit API key [$CURRENT_LK_KEY]: " IN_LK_KEY
+    LK_KEY="${IN_LK_KEY:-$CURRENT_LK_KEY}"
+    read -p "  LiveKit API secret [$CURRENT_LK_SECRET]: " IN_LK_SECRET
+    LK_SECRET="${IN_LK_SECRET:-$CURRENT_LK_SECRET}"
+    ;;
+  *)
+    LK_URL="$CURRENT_LK_URL"
+    LK_KEY="$CURRENT_LK_KEY"
+    LK_SECRET="$CURRENT_LK_SECRET"
+    ;;
+esac
+
+read -p "Tenor (GIF picker) API key [$CURRENT_TENOR]: " IN_TENOR
+TENOR="${IN_TENOR:-$CURRENT_TENOR}"
+
+echo ""
+echo "writing modules/conf/deploy.go..."
+
+write_string_var Domain "$DOMAIN"
+write_bool_var Secure "$SECURE"
+write_string_var TermsURL "$TERMS_URL"
+write_string_var MasterKey "$MASTER_KEY"
+write_string_var DBPassword "$DB_PASSWORD"
+write_string_var LiveKitURL "$LK_URL"
+write_string_var LiveKitAPIKey "$LK_KEY"
+write_string_var LiveKitAPISecret "$LK_SECRET"
+write_string_var TenorAPIKey "$TENOR"
+write_origins "$DOMAIN"
+
 $PSQL -c "ALTER USER $PGUSER WITH PASSWORD '$DB_PASSWORD';" postgres >/dev/null
 
 if ! $PSQL -lqt postgres | cut -d \| -f 1 | grep -qw "$PGDB"; then

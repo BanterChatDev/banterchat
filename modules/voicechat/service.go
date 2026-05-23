@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/livekit/protocol/auth"
+	"ror/modules/conf"
 	"ror/modules/db"
 	"ror/modules/websocket"
 )
 
 type Service struct {
-	cfg                 Config
 	DB                  *db.DB
 	Hub                 *websocket.Hub
 	DecryptUsernameByID func(userID string) string
@@ -20,9 +20,8 @@ type Service struct {
 	presence map[string]map[string]struct{}
 }
 
-func NewService(cfg Config, dbConn *db.DB, hub *websocket.Hub) *Service {
+func NewService(dbConn *db.DB, hub *websocket.Hub) *Service {
 	return &Service{
-		cfg:      cfg,
 		DB:       dbConn,
 		Hub:      hub,
 		presence: make(map[string]map[string]struct{}),
@@ -30,7 +29,7 @@ func NewService(cfg Config, dbConn *db.DB, hub *websocket.Hub) *Service {
 }
 
 func (s *Service) MintToken(userID, channelID, username string) (string, error) {
-	at := auth.NewAccessToken(s.cfg.APIKey, s.cfg.APISecret)
+	at := auth.NewAccessToken(conf.LiveKitAPIKey, conf.LiveKitAPISecret)
 	at.SetIdentity(userID)
 	at.SetName(username)
 	at.SetValidFor(time.Hour)

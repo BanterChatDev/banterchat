@@ -30,6 +30,7 @@ import (
 	"ror/modules/csrf"
 	"ror/modules/discovery"
 	"ror/modules/dms"
+	"ror/modules/embed"
 	"ror/modules/emojis"
 	"ror/modules/friends"
 	"ror/modules/gifs"
@@ -65,11 +66,8 @@ import (
 
 func main() {
 	os.Setenv("TZ", "UTC")
-	loadEnvFile(".env")
 
-	confCfg := conf.Default{}
-
-	dbConn, err := db.Open(db.BuildDSN(confCfg.DB()))
+	dbConn, err := db.Open(db.BuildDSN())
 	if err != nil {
 		logger.Error("db open failed", "error", err)
 		panic(err)
@@ -83,7 +81,7 @@ func main() {
 	e.Use(logger.Middleware())
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			if c.Request().ContentLength > confCfg.Attachments().MaxSize+(1<<20) {
+			if c.Request().ContentLength > attachments.DefaultConfig().MaxSize+(1<<20) {
 				return c.JSON(413, echo.Map{"error": apperr.ErrFileTooLarge.Error()})
 			}
 			// Version-agnostic: any /api/* request (current /api/v1/* or
@@ -108,7 +106,7 @@ func main() {
 	// funcs (in modules/bots/) and their own middleware stack (bot
 	// token auth + bot rate-limit buckets). Shared service layer
 	// underneath; shared routing pipeline never.
-	apiPrefix := confCfg.Server().APIPrefix()
+	apiPrefix := conf.APIPrefix()
 	apiPrefixGroup := apiPrefix
 	pathLogin := apiPrefix + "/login"
 	pathReg := apiPrefix + "/register"
@@ -121,7 +119,7 @@ func main() {
 	// /api/v2/* picks up the default rate limit automatically; the
 	// per-route rules below are version-specific via the pathXXX
 	// constants and only match the active version's paths.
-	rlim := confCfg.RateLimit()
+	rlim := ratelimit.DefaultLimits()
 	rl := ratelimit.New(ratelimit.Config{
 		Enabled:     rlim.Enabled,
 		APIPrefix:   "/api/",
@@ -142,12 +140,12 @@ func main() {
 		e.Use(rl.Middleware())
 	}
 
-	wsHub := websocket.NewHub(confCfg.WS(), confCfg.RateLimit(), rl)
-	csrfSvc := csrf.NewService(confCfg.Server().Secure)
+	wsHub := websocket.NewHub(websocket.DefaultConfig(), ratelimit.DefaultLimits(), rl)
+	csrfSvc := csrf.NewService(conf.Secure)
 	auditSvc := auditlog.NewService(dbConn)
-	usersSvc := users.NewService(dbConn, confCfg.Users(), confCfg.Auth().MasterKey, confCfg.Auth().SiteAdmins, confCfg.Server().Blacklist.Usernames, confCfg.Auth().MinUsername, confCfg.Auth().MaxUsername, wsHub)
+	usersSvc := users.NewService(dbConn, users.DefaultConfig(), conf.MasterKey, conf.SiteAdmins, conf.UsernameBlacklist, auth.DefaultConfig().MinUsername, auth.DefaultConfig().MaxUsername, wsHub)
 	dbConn.OnGuildMembershipChange = users.InvalidateMemberListCache
-	uiprefsSvc := uiprefs.NewService(dbConn, wsHub, confCfg.Auth().MasterKey)
+	uiprefsSvc := uiprefs.NewService(dbConn, wsHub, conf.MasterKey)
 	accessibilityprefsSvc := accessibilityprefs.NewService(dbConn, wsHub)
 	usersSvc.SetPrefs(uiprefsSvc)
 	auditSvc.HydrateUser = func(userID string) map[string]any {
@@ -165,25 +163,25 @@ func main() {
 		}
 	}
 	presenceSvc := presence.NewService(dbConn, wsHub)
-	keyfileSvc := keyfile.NewService(confCfg.Keyfile(), wsHub)
-	authSvc := auth.NewService(dbConn, confCfg.Auth(), confCfg.Server().Domain, confCfg.Server().Secure, confCfg.Server().Blacklist.Usernames, confCfg.RateLimit().Enabled, wsHub, usersSvc, keyfileSvc, auditSvc)
-	channelsSvc := channels.NewService(dbConn, wsHub, confCfg.Channels(), confCfg.Auth().MasterKey, auditSvc)
+	keyfileSvc := keyfile.NewService(keyfile.DefaultConfig(), wsHub)
+	authSvc := auth.NewService(dbConn, auth.DefaultConfig(), conf.Domain, conf.Secure, conf.UsernameBlacklist, ratelimit.DefaultLimits().Enabled, wsHub, usersSvc, keyfileSvc, auditSvc)
+	channelsSvc := channels.NewService(dbConn, wsHub, channels.DefaultConfig(), conf.MasterKey, auditSvc)
 	categoriesSvc := categories.NewService(dbConn, wsHub, auditSvc)
 	attachmentPageTemplate := template.Must(template.ParseFiles(filepath.Join("assets", "public", "attachment.html")))
-	attSvc := attachments.NewService(dbConn, confCfg.Attachments(), (conf.Default{}).Auth().MasterKey, attachmentPageTemplate)
+	attSvc := attachments.NewService(dbConn, attachments.DefaultConfig(), conf.MasterKey, attachmentPageTemplate)
 	usersSvc.DeleteAttachment = attSvc.DeleteByID
 	uiprefsSvc.DeleteAttachment = attSvc.DeleteByID
 	invitePageTemplate := template.Must(template.ParseFiles(filepath.Join("assets", "public", "invite.html")))
 	botInvitePageTemplate := template.Must(template.ParseFiles(filepath.Join("assets", "public", "botinvite.html")))
 	discoveryListingTemplate := template.Must(template.ParseFiles(filepath.Join("assets", "public", "discovery", "listing.html")))
-	avatarSvc := avatar.NewService(dbConn, confCfg.Avatar(), (conf.Default{}).Auth().MasterKey, wsHub)
+	avatarSvc := avatar.NewService(dbConn, avatar.DefaultConfig(), conf.MasterKey, wsHub)
 	avatarSvc.UpdateUserAvatar = usersSvc.UpdateAvatar
 	usersSvc.GetAvatarID = avatarSvc.GetByUserID
 
-	bannerSvc := banner.NewService(dbConn, confCfg.Banner(), (conf.Default{}).Auth().MasterKey, wsHub)
+	bannerSvc := banner.NewService(dbConn, banner.DefaultConfig(), conf.MasterKey, wsHub)
 	usersSvc.GetBannerID = bannerSvc.GetByUserID
 	usersSvc.GetBannerCrop = bannerSvc.GetCropByUserID
-	msgSvc := messages.NewService(dbConn, wsHub, confCfg.Messages(), confCfg.Embed(), confCfg.Attachments(), confCfg.Auth().MasterKey, usersSvc)
+	msgSvc := messages.NewService(dbConn, wsHub, messages.DefaultConfig(), embed.DefaultConfig(), attachments.DefaultConfig(), conf.MasterKey, usersSvc)
 	msgSvc.GetAvatarByUserID = avatarSvc.GetByUserID
 	presenceSvc.BuildUser = func(userID string) map[string]interface{} {
 		username, displayName := usersSvc.DecryptIdentity(userID)
@@ -239,19 +237,19 @@ func main() {
 	authSvc.IsBanned = modSvc.IsBanned
 	authSvc.IsIPBanned = modSvc.IsIPBanned
 	usersSvc.IsBanned = modSvc.IsBanned
-	rolesSvc := roles.NewService(dbConn, wsHub, confCfg.Roles(), confCfg.Auth().MasterKey, auditSvc)
+	rolesSvc := roles.NewService(dbConn, wsHub, roles.DefaultConfig(), conf.MasterKey, auditSvc)
 
 	typingSvc := typing.NewService(wsHub, usersSvc, dbConn)
-	proxySvc := proxy.NewService(confCfg.Proxy())
+	proxySvc := proxy.NewService(proxy.DefaultConfig())
 
-	dmSvc := dms.NewService(dbConn, wsHub, confCfg.DMs(), confCfg.Messages(), usersSvc)
-	friendsSvc := friends.NewService(dbConn, wsHub, (conf.Default{}).Auth().MasterKey)
+	dmSvc := dms.NewService(dbConn, wsHub, dms.DefaultConfig(), messages.DefaultConfig(), usersSvc)
+	friendsSvc := friends.NewService(dbConn, wsHub, conf.MasterKey)
 	friendsSvc.DecryptUsernameByID = usersSvc.DecryptUsernameByID
 	friendsSvc.GetAvatarByUserID = avatarSvc.GetByUserID
 	friendsSvc.GetFlairByUserID = func(uid string) string { return dbConn.GetUserFlair(uid) }
-	discoverySvc := discovery.NewService(dbConn, confCfg.Server().Domain, authSvc)
+	discoverySvc := discovery.NewService(dbConn, conf.Domain, authSvc)
 	discoverySvc.SetTemplates(&discovery.Templates{Listing: discoveryListingTemplate})
-	gifsSvc := gifs.NewService(dbConn, confCfg.Gifs(), wsHub)
+	gifsSvc := gifs.NewService(dbConn, gifs.DefaultConfig(), wsHub)
 	if err := discoverySvc.BackfillGuildNames(); err != nil {
 		logger.Error("discovery backfill failed", "error", err)
 	}
@@ -345,15 +343,15 @@ func main() {
 	)
 	wsHub.AttachMembershipIndex(membershipIdx)
 
-	reactionSvc := reactions.NewService(dbConn, wsHub, confCfg.Reactions())
+	reactionSvc := reactions.NewService(dbConn, wsHub, reactions.DefaultConfig())
 	reactionSvc.DecryptUsername = usersSvc.DecryptUsernameByID
 	msgSvc.DeleteReactions = reactionSvc.DeleteByMessage
 	msgSvc.GetReactionsBatch = reactionSvc.GetReactionsBatch
-	voiceSvc := voicechat.NewService(confCfg.VoiceChat(), dbConn, wsHub)
+	voiceSvc := voicechat.NewService(dbConn, wsHub)
 	voiceSvc.DecryptUsernameByID = usersSvc.DecryptUsernameByID
 
 	// --- Bots ---
-	botsSvc := bots.NewService(dbConn, confCfg.Bots(), confCfg.Auth(), confCfg.Auth().MasterKey, confCfg.Server().Blacklist.Usernames, usersSvc, wsHub)
+	botsSvc := bots.NewService(dbConn, bots.DefaultConfig(), auth.DefaultConfig(), conf.MasterKey, conf.UsernameBlacklist, usersSvc, wsHub)
 	botsSvc.GetAvatarID = avatarSvc.GetByUserID
 	botsSvc.GetBannerID = bannerSvc.GetByUserID
 	modSvc.InvalidateBotToken = botsSvc.InvalidateTokenByBotUserID
@@ -402,7 +400,7 @@ func main() {
 		}
 		sendFn(data)
 	}
-	wsHub.SetBotResumeWindow(time.Duration(confCfg.Bots().GatewayResumeWinS) * time.Second)
+	wsHub.SetBotResumeWindow(time.Duration(bots.DefaultConfig().GatewayResumeWinS) * time.Second)
 
 	wsHub.HandlePacketType("message_send", msgSvc.HandleSend)
 	wsHub.HandlePacketType("message_edit", msgSvc.HandleEdit)
@@ -431,7 +429,7 @@ func main() {
 		}
 	}()
 
-	guildSvc := guilds.NewService(dbConn, wsHub, confCfg.Guilds(), confCfg.Roles(), confCfg.Auth().MasterKey)
+	guildSvc := guilds.NewService(dbConn, wsHub, guilds.DefaultConfig(), roles.DefaultConfig(), conf.MasterKey)
 	guildSvc.IsSiteAdminFn = usersSvc.IsSiteAdmin
 	guildSvc.DecryptUsernameFn = usersSvc.DecryptUsernameByID
 	guildSvc.CountOnlineInGuild = presenceSvc.CountOnlineInGuild
@@ -444,13 +442,13 @@ func main() {
 	guildSvc.RecordAuditFn = func(actorID, guildID, targetType, targetID, action, reason string, metadata map[string]any) {
 		auditSvc.RecordGuild(actorID, guildID, targetType, targetID, action, reason, metadata)
 	}
-	threadsSvc := threads.NewService(dbConn, wsHub, confCfg.Channels(), confCfg.Auth().MasterKey, auditSvc)
+	threadsSvc := threads.NewService(dbConn, wsHub, channels.DefaultConfig(), conf.MasterKey, auditSvc)
 	warningsSvc := warnings.NewService(dbConn, usersSvc, wsHub, auditSvc)
-	webhooksSvc := webhooks.NewService(dbConn, wsHub, auditSvc, confCfg.Webhooks(), confCfg.Attachments(), confCfg.Auth().MasterKey, confCfg.Server().APIPrefix())
+	webhooksSvc := webhooks.NewService(dbConn, wsHub, auditSvc, webhooks.DefaultConfig(), attachments.DefaultConfig(), conf.MasterKey, conf.APIPrefix())
 	webhooksSvc.OnSendMessage = msgSvc.SendAsWebhook
 	webhooksSvc.OnStoreAttachment = attSvc.StoreFromWebhook
 	botAPI := bots.NewAPI(botsSvc, msgSvc, reactionSvc, typingSvc, avatarSvc, bannerSvc, webhooksSvc)
-	webhookAvatarSvc := webhooks.NewAvatarService(dbConn, confCfg.Avatar().User, confCfg.Auth().MasterKey, auditSvc)
+	webhookAvatarSvc := webhooks.NewAvatarService(dbConn, avatar.DefaultConfig().User, conf.MasterKey, auditSvc)
 	authSvc.IsSuspended = dbConn.IsSuspendedByID
 	adminSvc := admin.NewService(dbConn, usersSvc, guildSvc, wsHub, auditSvc, botsSvc)
 	adminSvc.CountOnlineInGuild = presenceSvc.CountOnlineInGuild
@@ -497,7 +495,7 @@ func main() {
 		return out
 	}
 
-	invitesSvc := invites.NewService(dbConn, wsHub, confCfg.Invites(), authSvc, auditSvc)
+	invitesSvc := invites.NewService(dbConn, wsHub, invites.DefaultConfig(), authSvc, auditSvc)
 	invitesSvc.SetInvitePageTemplate(invitePageTemplate)
 	invitesSvc.Bootstrap()
 	invitesSvc.CanManageGuild = guildSvc.CanManageGuild
@@ -518,7 +516,7 @@ func main() {
 		msgSvc.SendSystemMessage(wcID, "user_join", map[string]interface{}{"user_id": userID})
 	}
 
-	emojisSvc := emojis.NewService(dbConn, confCfg.Emojis(), confCfg.Auth().MasterKey, wsHub)
+	emojisSvc := emojis.NewService(dbConn, emojis.DefaultConfig(), conf.MasterKey, wsHub)
 	emojisSvc.CanManageGuild = func(userID, guildID string) bool {
 		row, err := dbConn.GetGuild(guildID)
 		if err != nil {
@@ -678,17 +676,19 @@ func main() {
 
 	e.GET("/api/v1/config", func(c echo.Context) error {
 		return c.JSON(200, echo.Map{
-			"max_file_size":      confCfg.Attachments().MaxSize,
-			"max_file_count":     confCfg.Attachments().MaxFileCount,
-			"max_message_length": confCfg.Messages().MaxLength,
+			"max_file_size":      attachments.DefaultConfig().MaxSize,
+			"max_file_count":     attachments.DefaultConfig().MaxFileCount,
+			"max_message_length": messages.DefaultConfig().MaxLength,
+			"discovery_url":      conf.DiscoveryURL,
+			"terms_url":          conf.TermsURL,
 		})
 	})
 	e.GET("/oauth2/authorize", oauth2Svc.BotInvitePage)
 	registerSPARoutes(e)
 
-	logger.Info("server starting", "addr", confCfg.Server().HTTPAddr, "domain", confCfg.Server().Domain)
+	logger.Info("server starting", "addr", conf.HTTPAddr, "domain", conf.Domain)
 	go func() {
-		if err := e.Start(confCfg.Server().HTTPAddr); err != nil {
+		if err := e.Start(conf.HTTPAddr); err != nil {
 			logger.Info("server shutting down")
 		}
 	}()
@@ -748,27 +748,4 @@ func spaHandler(c echo.Context) error {
 
 func notFoundHandler(c echo.Context) error {
 	return apperr.NotFound(c)
-}
-
-func loadEnvFile(path string) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return
-	}
-	for _, line := range strings.Split(string(data), "\n") {
-		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-		eq := strings.Index(line, "=")
-		if eq < 0 {
-			continue
-		}
-		key := strings.TrimSpace(line[:eq])
-		val := strings.TrimSpace(line[eq+1:])
-		val = strings.Trim(val, `"'`)
-		if os.Getenv(key) == "" {
-			os.Setenv(key, val)
-		}
-	}
 }

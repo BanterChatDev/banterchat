@@ -2,7 +2,7 @@ package warnings
 
 import "time"
 
-func (s *Service) emitIssued(targetID, wid string, reasons []string, note string, sev int, message string) {
+func (s *Service) emitIssued(targetID, wid string, reasons []string, note string, sev int) {
 	if s.hub == nil {
 		return
 	}
@@ -11,7 +11,6 @@ func (s *Service) emitIssued(targetID, wid string, reasons []string, note string
 		"reasons":    reasons,
 		"note":       note,
 		"severity":   sev,
-		"message":    message,
 		"created_at": time.Now(),
 	})
 }

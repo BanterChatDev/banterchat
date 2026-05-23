@@ -1,10 +1,7 @@
 package gifs
 
-import "os"
-
 type Config struct {
 	Provider       string
-	APIKey         string
 	Client         string
 	BaseURL        string
 	ContentFilter  string
@@ -18,7 +15,6 @@ type Config struct {
 func DefaultConfig() Config {
 	return Config{
 		Provider:      "tenor",
-		APIKey:        os.Getenv("TENOR_API_KEY"),
 		Client:        "banter",
 		BaseURL:       "https://tenor.googleapis.com/v2",
 		ContentFilter: "off",

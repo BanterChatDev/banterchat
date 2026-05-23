@@ -87,7 +87,7 @@ func (s *Service) getCategoryPerms(categoryID string) ([]CategoryPermission, err
 func (s *Service) decryptOverrideRoleNames(cats []Category) {
 	for i := range cats {
 		for j := range cats[i].PermissionOverrides {
-			cats[i].PermissionOverrides[j].RoleName = encryption.DecryptField(cats[i].PermissionOverrides[j].RoleName, (conf.Default{}).Auth().MasterKey)
+			cats[i].PermissionOverrides[j].RoleName = encryption.DecryptField(cats[i].PermissionOverrides[j].RoleName, conf.MasterKey)
 		}
 	}
 }
@@ -118,7 +118,7 @@ func (s *Service) getDecryptedWithOverrides(id string) (*Category, error) {
 	overrides, _ := s.getCategoryPerms(id)
 	if overrides == nil { overrides = []CategoryPermission{} }
 	for i := range overrides {
-		overrides[i].RoleName = encryption.DecryptField(overrides[i].RoleName, (conf.Default{}).Auth().MasterKey)
+		overrides[i].RoleName = encryption.DecryptField(overrides[i].RoleName, conf.MasterKey)
 	}
 	cat.PermissionOverrides = overrides
 	return cat, nil

@@ -8,6 +8,7 @@ import { u } from '../../api/routes';
 import UserAvatar from '../user/UserAvatar';
 import { AvatarWithStatus } from '../status';
 import { useT } from '../../hooks/useT';
+import { DISCOVERY_URL } from '../../config';
 import Tooltip from '../ui/Tooltip';
 
 const VARIANTS = {
@@ -256,11 +257,13 @@ export default function GuildSelector({
         </svg>
       </StaticBtn>
 
-      <StaticBtn vc={vc} onClick={() => window.open('https://guilds.banterchat.org/', '_blank', 'noopener')} title={t('guilds.selector_discover_title')}>
-        <svg className={`${vc.iconSize} text-emerald-400 group-hover:text-white transition-colors`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </StaticBtn>
+      {DISCOVERY_URL && (
+        <StaticBtn vc={vc} onClick={() => window.open(DISCOVERY_URL, '_blank', 'noopener')} title={t('guilds.selector_discover_title')}>
+          <svg className={`${vc.iconSize} text-emerald-400 group-hover:text-white transition-colors`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </StaticBtn>
+      )}
     </div>
   );
 }
