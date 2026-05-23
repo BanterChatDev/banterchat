@@ -9,7 +9,7 @@ This repo is the full Banter stack. A Go backend that handles the REST API and W
 Features that work right now:
 
 - Servers, channels (text and voice), categories, threads
-- Direct messages and group DMs
+- Direct messages
 - Friends, blocking, presence (online, idle, do not disturb, invisible)
 - Roles with 40+ granular permissions, channel and category permission overrides
 - File attachments, custom emojis per server, reactions, mentions
