@@ -28,5 +28,3 @@ main
 *.swo
 
 .local/
-ai.txt
-prompt.txt

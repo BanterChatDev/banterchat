@@ -1,6 +1,7 @@
 package warnings
 
 import (
+	"os"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -49,11 +50,19 @@ var presetReasons = []string{
 	"Misuse of the report system",
 }
 
-const warningSystemTemplate = `You have been warned by the official BanterChat admins, the reason behind your warn includes the following:
+var warningSystemTemplate = buildWarningTemplate()
+
+func buildWarningTemplate() string {
+	termsURL := os.Getenv("TERMS_URL")
+	if termsURL == "" {
+		termsURL = "https://example.com/terms"
+	}
+	return `You have been warned by the server admins, the reason includes the following:
 
 %s
 
-Please be sure to follow our terms of service. https://banterchat.org/terms`
+Please follow the terms of service. ` + termsURL
+}
 
 func (s *Service) PresetReasons(c echo.Context) error {
 	return c.JSON(200, echo.Map{"reasons": presetReasons})

@@ -1,6 +1,0 @@
-node_modules
-dist
-out
-src/ui/dist
-*.log
-.DS_Store

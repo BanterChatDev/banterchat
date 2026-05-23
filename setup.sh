@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+if [ "$(id -u)" = "0" ]; then
+  echo "do not run setup.sh as root. postgres initdb refuses to run as root."
+  echo "run as your normal user. it will sudo when it needs to install packages."
+  exit 1
+fi
+
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 

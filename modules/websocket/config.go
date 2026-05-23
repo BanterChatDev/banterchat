@@ -1,6 +1,10 @@
 package websocket
 
-import "time"
+import (
+	"os"
+	"strings"
+	"time"
+)
 
 type Config struct {
 	ReadLimit          int64
@@ -17,8 +21,28 @@ type Config struct {
 	PingPeriod         time.Duration
 }
 
+func envOr(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
+}
+
 func DefaultConfig() Config {
-	domain := "banterchat.org"
+	domain := envOr("DOMAIN", "localhost")
+	origins := []string{
+		"https://" + domain,
+		"http://" + domain,
+		"http://localhost:3030",
+	}
+	if extra := os.Getenv("WS_EXTRA_ORIGINS"); extra != "" {
+		for _, o := range strings.Split(extra, ",") {
+			o = strings.TrimSpace(o)
+			if o != "" {
+				origins = append(origins, o)
+			}
+		}
+	}
 	return Config{
 		ReadLimit:          1048576,
 		MaxConnections:     5,
@@ -31,13 +55,6 @@ func DefaultConfig() Config {
 		WriteWait:          10 * time.Second,
 		PongWait:           60 * time.Second,
 		PingPeriod:         54 * time.Second,
-		AllowedOrigins: []string{
-			"https://" + domain,
-			"http://" + domain,
-			"http://localhost:3030",
-			"http://203.161.60.25:3030",
-			"http://203.161.60.25",
-			"http://10.2.0.2:3030",
-		},
+		AllowedOrigins:     origins,
 	}
 }
